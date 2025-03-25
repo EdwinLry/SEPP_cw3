@@ -85,7 +85,12 @@ public class AdminStaffController extends StaffController {
 
         String question = view.getInput("Enter the question for new FAQ item: ");
         String answer = view.getInput("Enter the answer for new FAQ item: ");
-        currentSection.getItems().add(new FAQItem(question, answer));
+        String courseTag = view.getYesNoInput("Is this FAQ item specific to a course?") ? view.getInput("Enter course code: ") : null;
+        if (courseTag != null) {
+            //TODO: Add validation for course code after course implementation
+            currentSection.addItem(question, answer, courseTag);
+        }
+        else currentSection.addItem(question, answer);
 
         String emailSubject = "FAQ topic '" + currentSection.getTopic() + "' updated";
         StringBuilder emailContentBuilder = new StringBuilder();
