@@ -97,23 +97,6 @@ public class Course {
         return false;
     }
 
-    @Override
-    public String toString() {
-        return "Course{" +
-                "courseCode='" + courseCode + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", requiresComputers=" + requiresComputers +
-                ", courseOrganiserName='" + courseOrganiserName + '\'' +
-                ", courseOrganiserEmail='" + courseOrganiserEmail + '\'' +
-                ", courseSecretaryName='" + courseSecretaryName + '\'' +
-                ", courseSecretaryEmail='" + courseSecretaryEmail + '\'' +
-                ", requiredTutorials=" + requiredTutorials +
-                ", requiredLabs=" + requiredLabs +
-                ", availableIds=" + availableIds +
-                '}';
-    }
-
     public String getCourseCode() {
         return courseCode;
     }

@@ -10,21 +10,8 @@ public abstract class Activity {
     private final LocalTime startTime;
     private final LocalDate endDate;
     private final LocalTime endTime;
-    private String location;
+    private final String location;
     private final DayOfWeek day;
-
-    @Override
-    public String toString() {
-        return "Activity{" +
-                "id=" + id +
-                ", startDate=" + startDate +
-                ", startTime=" + startTime +
-                ", endDate=" + endDate +
-                ", endTime=" + endTime +
-                ", location='" + location + '\'' +
-                ", day=" + day +
-                '}';
-    }
 
     public Activity(int id, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime,
                     String location, DayOfWeek day) {

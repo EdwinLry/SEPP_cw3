@@ -1,7 +1,7 @@
 package view;
 
-import model.FAQ;
-import model.FAQSection;
+import model.FAQManager;
+import model.FAQ.FAQSection;
 import model.Inquiry;
 
 public interface View {
@@ -13,7 +13,7 @@ public interface View {
     void displayError(String text);
     void displayException(Exception e);
     void displayDivider();
-    void displayFAQ(FAQ faq);
+    void displayFAQ(FAQManager faqManager);
     void displayFAQSection(FAQSection section);
     void displayInquiry(Inquiry inquiry);
 }

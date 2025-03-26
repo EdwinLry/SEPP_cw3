@@ -1,10 +1,11 @@
 package view;
 
 import model.*;
+import model.FAQ.FAQItem;
+import model.FAQ.FAQSection;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.List;
 import java.util.Scanner;
 
 public class TextUserInterface implements View {
@@ -65,11 +66,11 @@ public class TextUserInterface implements View {
     }
 
     @Override
-    public void displayFAQ(FAQ faq) {
+    public void displayFAQ(FAQManager faqManager) {
         System.out.println("Frequently Asked Questions");
         displayDivider();
         int i = 0;
-        for (FAQSection section : faq.getSections()) {
+        for (FAQSection section : faqManager.getSections()) {
             System.out.print("[");
             System.out.print(i++);
             System.out.print("] ");

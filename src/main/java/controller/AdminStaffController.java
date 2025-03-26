@@ -3,9 +3,9 @@ package controller;
 import external.AuthenticationService;
 import external.EmailService;
 import model.*;
+import model.FAQ.FAQItem;
+import model.FAQ.FAQSection;
 import view.View;
-
-import java.io.IOException;
 
 public class AdminStaffController extends StaffController {
     public AdminStaffController(SharedContext sharedContext, View view, AuthenticationService auth, EmailService email) {

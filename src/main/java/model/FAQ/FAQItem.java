@@ -1,4 +1,4 @@
-package model;
+package model.FAQ;
 
 public class FAQItem {
 
