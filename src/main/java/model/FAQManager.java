@@ -1,9 +1,11 @@
 package model;
 
+import model.FAQ.FAQSection;
+
 import java.util.LinkedList;
 import java.util.List;
 
-public class FAQ {
+public class FAQManager {
     private final List<FAQSection> sections = new LinkedList<>();
 
     public void addSection(FAQSection section) {

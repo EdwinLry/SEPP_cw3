@@ -3,16 +3,8 @@ package controller;
 import external.AuthenticationService;
 import external.EmailService;
 import model.*;
-import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
+import model.FAQ.FAQSection;
 import view.View;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class InquirerController extends Controller {
     public InquirerController(SharedContext sharedContext, View view, AuthenticationService auth, EmailService email) {

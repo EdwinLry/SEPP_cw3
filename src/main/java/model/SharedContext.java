@@ -7,18 +7,18 @@ public class SharedContext {
     public User currentUser;
 
     public final List<Inquiry> inquiries;
-    public final FAQ faq;
+    public final FAQManager faqManager;
     private final Map<String, Set<String>> faqTopicsUpdateSubscribers;
 
     public SharedContext() {
         this.currentUser = new Guest();
         this.inquiries = new ArrayList<>();
-        faq = new FAQ();
+        faqManager = new FAQManager();
         faqTopicsUpdateSubscribers = new HashMap<>();
     }
 
-    public FAQ getFAQ() {
-        return faq;
+    public FAQManager getFAQ() {
+        return faqManager;
     }
 
     public boolean registerForFAQUpdates(String email, String topic) {
