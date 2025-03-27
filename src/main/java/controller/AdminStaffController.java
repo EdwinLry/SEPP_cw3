@@ -163,4 +163,54 @@ public class AdminStaffController extends StaffController {
         );
         view.displaySuccess("Inquiry has been reassigned");
     }
+
+    public void manageCourses() {
+        while (true) {
+            view.displayInfo("[-1] Return to main menu");
+            view.displayInfo("[-2] Add course");
+            view.displayInfo("[-3] Remove course");
+            String input = view.getInput("Please choose an option: ");
+            try {
+                int optionNo = Integer.parseInt(input);
+
+                if (optionNo == -2) {
+                    addCourse();
+                } else if (optionNo == -1) {
+                    break;
+                } else if (optionNo == -3) {
+                    //TODO: Implement course removal
+                    break;
+                } else {
+                    view.displayError("Invalid option: " + optionNo);
+                }
+            } catch (NumberFormatException e) {
+                view.displayError("Invalid option: " + input);
+            }
+        }
+    }
+    private void addCourse() {
+        String courseCode = view.getInput("Enter course code: ");
+        if (sharedContext.getCourseManager().checkCourseCode(courseCode)) {
+            view.displayError("Course with the same code already exists");
+            return;
+        }
+        String courseName = view.getInput("Enter course name: ");
+        String courseDescription = view.getInput("Enter course description: ");
+        boolean requiresComputers = view.getYesNoInput("Does this course require computers?");
+        String courseOrganiserName = view.getInput("Enter course organiser name: ");
+        //TODO: Add email validation
+        String courseOrganiserEmail = view.getInput("Enter course organiser email: ");
+        String courseSecretaryName = view.getInput("Enter course secretary name: ");
+        String courseSecretaryEmail = view.getInput("Enter course secretary email: ");
+        try {
+            int requiredTutorials = Integer.parseInt(view.getInput("Enter required tutorials: "));
+            int requiredLabs = Integer.parseInt(view.getInput("Enter required labs: "));
+            if (sharedContext.getCourseManager().addCourse(courseCode, courseName, courseDescription, requiresComputers, courseOrganiserName, courseOrganiserEmail,
+                    courseSecretaryName, courseSecretaryEmail, requiredTutorials, requiredLabs)) {
+                view.displaySuccess("Course added successfully");
+            }
+        }catch (NumberFormatException e){
+            view.displayError("Invalid input for required tutorials or labs");
+        }
+    }
 }

@@ -8,19 +8,23 @@ public class SharedContext {
 
     public final List<Inquiry> inquiries;
     public final FAQManager faqManager;
+    public final CourseManager courseManager;
     private final Map<String, Set<String>> faqTopicsUpdateSubscribers;
 
     public SharedContext() {
         this.currentUser = new Guest();
         this.inquiries = new ArrayList<>();
         faqManager = new FAQManager();
+        courseManager = new CourseManager();
         faqTopicsUpdateSubscribers = new HashMap<>();
     }
 
     public FAQManager getFAQ() {
         return faqManager;
     }
-
+    public CourseManager getCourseManager() {
+        return courseManager;
+    }
     public boolean registerForFAQUpdates(String email, String topic) {
         if (faqTopicsUpdateSubscribers.containsKey(topic)) {
             return faqTopicsUpdateSubscribers.get(topic).add(email);
