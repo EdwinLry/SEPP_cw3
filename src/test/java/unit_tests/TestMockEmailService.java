@@ -1,40 +1,45 @@
 package unit_tests;
 
 import external.MockEmailService;
+import external.EmailService;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestMockEmailService {
 
-    private final MockEmailService emailService = new MockEmailService();
-
     @Test
-    public void sendEmail_withValidEmails_shouldReturnSuccess() {
-        int result = emailService.sendEmail("sender@example.com", "recipient@example.com", "Subject", "Body content");
-        assertEquals(MockEmailService.STATUS_SUCCESS, result, "Expected STATUS_SUCCESS when both emails are valid");
+    public void validEmails() {
+        MockEmailService emailService = new MockEmailService();
+        int result = emailService.sendEmail("sender@icloud.com", "recipient@cloud.com", "Subject", "Content");
+        assertEquals(EmailService.STATUS_SUCCESS, result, "Success (0) when both emails are valid.");
     }
 
     @Test
-    public void sendEmail_withInvalidSenderEmail_shouldReturnInvalidSenderStatus() {
-        int result = emailService.sendEmail("invalid-sender", "recipient@example.com", "Subject", "Body content");
-        assertEquals(MockEmailService.STATUS_INVALID_SENDER_EMAIL, result, "Expected STATUS_INVALID_SENDER_EMAIL for invalid sender");
+    public void invalidSenderEmail() {
+        MockEmailService emailService = new MockEmailService();
+        int result = emailService.sendEmail("invalid-sender", "recipient@icloud.com", "Subject", "Content");
+        assertEquals(EmailService.STATUS_INVALID_SENDER_EMAIL, result, "Invalid sender (1) when sender is invalid.");
     }
 
     @Test
-    public void sendEmail_withNullSender_shouldReturnInvalidSenderStatus() {
-        int result = emailService.sendEmail(null, "recipient@example.com", "Subject", "Body content");
-        assertEquals(MockEmailService.STATUS_INVALID_SENDER_EMAIL, result, "Expected STATUS_INVALID_SENDER_EMAIL when sender is null");
+    public void nullSenderEmail() {
+        MockEmailService emailService = new MockEmailService();
+        int result = emailService.sendEmail(null, "recipient@icloud.com", "Subject", "Body content");
+        assertEquals(EmailService.STATUS_INVALID_SENDER_EMAIL, result, "Invalid sender (1) when sender is null.");
     }
 
     @Test
-    public void sendEmail_withInvalidRecipientEmail_shouldReturnInvalidRecipientStatus() {
-        int result = emailService.sendEmail("sender@example.com", "not-an-email", "Subject", "Body content");
-        assertEquals(MockEmailService.STATUS_INVALID_RECIPIENT_EMAIL, result, "Expected STATUS_INVALID_RECIPIENT_EMAIL for invalid recipient");
+    public void invalidRecipientEmail() {
+        MockEmailService emailService = new MockEmailService();
+        int result = emailService.sendEmail("sender@icloud.com", "invalid-reciepent", "Subject", "Content");
+        assertEquals(EmailService.STATUS_INVALID_RECIPIENT_EMAIL, result, "Invalid recipient (2) when recipient is invalid.");
     }
 
     @Test
     public void sendEmail_withNullRecipient_shouldReturnInvalidRecipientStatus() {
-        int result = emailService.sendEmail("sender@example.com", null, "Subject", "Body content");
-        assertEquals(MockEmailService.STATUS_INVALID_RECIPIENT_EMAIL, result, "Expected STATUS_INVALID_RECIPIENT_EMAIL when recipient is null");
+        MockEmailService emailService = new MockEmailService();
+        int result = emailService.sendEmail("sender@example.com", null, "Subject", "Content");
+        assertEquals(EmailService.STATUS_INVALID_RECIPIENT_EMAIL, result, "Invalid recipient (2) when recipient is null.");
     }
 }
