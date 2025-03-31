@@ -127,14 +127,6 @@ public class AdminStaffController extends StaffController {
                 emailSubject,
                 emailContent
         );
-        for (String subscriberEmail : sharedContext.usersSubscribedToFAQTopic(currentSection.getTopic())) {
-            email.sendEmail(
-                    SharedContext.ADMIN_STAFF_EMAIL,
-                    subscriberEmail,
-                    emailSubject,
-                    emailContent
-            );
-        }
         view.displaySuccess("Created new FAQ item");
     }
 
