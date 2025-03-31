@@ -84,11 +84,27 @@ public class AdminStaffController extends StaffController {
         }
 
         String question = view.getInput("Enter the question for new FAQ item: ");
+        if(question == null || question.isEmpty()){
+            view.displayError("Question cannot be empty");
+            return;
+        }
+
         String answer = view.getInput("Enter the answer for new FAQ item: ");
-        String courseTag = view.getYesNoInput("Is this FAQ item specific to a course?") ? view.getInput("Enter course code: ") : null;
-        if (courseTag != null) {
-            //TODO: Add validation for course code after course implementation
-            currentSection.addItem(question, answer, courseTag);
+        if(answer == null || answer.isEmpty()){
+            view.displayError("Answer cannot be empty");
+            return;
+        }
+
+        boolean addTag = view.getYesNoInput("Would you like to add a Course tag?");
+
+        if (addTag) {
+            CourseManager courseManager = sharedContext.getCourseManager();
+            String fullCourseDetailsAsString = courseManager.ViewCourses();
+            if(fullCourseDetailsAsString.isEmpty()){
+                view.displayError("No courses available in the system");
+                return;
+            }
+
         }
         else currentSection.addItem(question, answer);
 
