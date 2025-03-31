@@ -2,12 +2,15 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import utils.Logger;
 
 public class CourseManager {
 
     private final List<Course> courses = new ArrayList<>();
+    private final List<Timetable> timetables = new ArrayList<>();
 
     public String ViewCourses() {
+        StringBuilder courseList = new StringBuilder();
         for (Course course : courses) {
             courseList.append(course.toString());
         }
@@ -40,5 +43,32 @@ public class CourseManager {
                 CSName, CSEmail, reqTutorials, reqLabs);
         courses.add(newCourse);
         return true;
+    }
+
+    public void addCourseToStudentTimetable(String studentEmail, String courseCode) {
+        Timetable currentTimeTable = null;
+        boolean found = false;
+        for(Timetable timetable : timetables) {
+            if (timetable.hasStudentEmail(studentEmail)) {
+                currentTimeTable = timetable;
+                found = true;
+                break;
+            }
+        }
+        if(!found) {
+            currentTimeTable = new Timetable(studentEmail);
+            timetables.add(currentTimeTable);
+        }
+
+    }
+    private boolean hasCourse(String courseCode) {
+        for (Course course : courses) {
+            if (course.getCourseCode().equals(courseCode)) {
+                return true;
+            }
+        }
+        Logger logger = Logger.getInstance();
+        logger.log(System.currentTimeMillis(),"addCourseToTimeTable",courseCode,"Course not found in courses list","Failed");
+        return false;
     }
 }

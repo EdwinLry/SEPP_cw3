@@ -1,4 +1,5 @@
-import java.time.LocalDateTime;
+package utils;
+
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class Logger {
         return instance;
     }
 
-    public void log(LocalDateTime time, String userId, String actionName, String inputs, String status) {
+    public void log(long time, String userId, String actionName, String inputs, String status) {
         String formattedTime = time.format(formatter);
         String logEntry = String.format("[%s] User: %s, Action: %s, Inputs: %s, Status: %s",
                 formattedTime, userId, actionName, inputs, status);
