@@ -1,5 +1,7 @@
 package model;
 
+import controller.AdminStaffController;
+
 import java.util.*;
 
 public class SharedContext {
@@ -8,12 +10,15 @@ public class SharedContext {
 
     public final List<Inquiry> inquiries;
     public final FAQManager faqManager;
+
+    public final CourseManager courseManager;
     private final Map<String, Set<String>> faqTopicsUpdateSubscribers;
 
     public SharedContext() {
         this.currentUser = new Guest();
         this.inquiries = new ArrayList<>();
         faqManager = new FAQManager();
+        courseManager = new CourseManager();
         faqTopicsUpdateSubscribers = new HashMap<>();
     }
 
@@ -38,5 +43,9 @@ public class SharedContext {
 
     public Set<String> usersSubscribedToFAQTopic(String topic) {
         return faqTopicsUpdateSubscribers.getOrDefault(topic, new HashSet<>());
+    }
+
+    public CourseManager getCourseManager() {
+        return courseManager;
     }
 }
