@@ -6,6 +6,7 @@ import java.util.List;
 public class CourseManager {
 
     private final List<Course> courses = new ArrayList<>();
+    private StringBuilder courseList = new StringBuilder();
 
     public String ViewCourses() {
         for (Course course : courses) {
