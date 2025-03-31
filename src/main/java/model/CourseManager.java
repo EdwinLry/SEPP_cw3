@@ -7,7 +7,11 @@ import utils.Logger;
 public class CourseManager {
 
     private final List<Course> courses = new ArrayList<>();
+<<<<<<< HEAD
     private final List<Timetable> timetables = new ArrayList<>();
+=======
+    private StringBuilder courseList = new StringBuilder();
+>>>>>>> f54a41423c7f2e242d580ffae851ebbdb0d03158
 
     public String ViewCourses() {
         StringBuilder courseList = new StringBuilder();
