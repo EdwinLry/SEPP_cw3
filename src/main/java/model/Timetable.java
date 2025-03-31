@@ -35,22 +35,31 @@ public class Timetable {
         return count;
     }
 
-    public String[] checkConflicts(LocalDate startDate, LocalTime startTime,
-                                   LocalDate endDate, LocalTime endTime) {
-        List<String> conflicts = new ArrayList<>();
-        LocalDateTime newStart = LocalDateTime.of(startDate, startTime);
-        LocalDateTime newEnd = LocalDateTime.of(endDate, endTime);
+    public int[] chosenActivities(String courseCode) {
+        List<Integer> activities = new ArrayList<>();
         for (TimeSlot slot : timeSlots) {
-            if (slot.isChosen()) {
-                LocalDateTime slotStart = LocalDateTime.of(slot.getStartDate(), slot.getStartTime());
-                LocalDateTime slotEnd = LocalDateTime.of(slot.getEndDate(), slot.getEndTime());
-                if (newStart.isBefore(slotEnd) && newEnd.isAfter(slotStart)) {
-                    conflicts.add("Conflict with course " + slot.courseCode +
-                            " activity " + slot.activityId);
+            if (slot.hasCourseCode(courseCode) && slot.isChosen()) {
+                activities.add(slot.activityId);
+            }
+        }
+        return activities.stream().mapToInt(i -> i).toArray();
+    }
+
+    public String[][] checkConflicts(LocalDate startDate, LocalTime startTime,
+                                   LocalDate endDate, LocalTime endTime) {
+        List<String[]> conflicts = new ArrayList<>();
+        for (TimeSlot slot : timeSlots) {
+            if (slot.getStartDate().isBefore(endDate) && slot.getEndDate().isAfter(startDate)) {
+                if (slot.getStartTime().isBefore(endTime) && slot.getEndTime().isAfter(startTime)) {
+                    String[] conflict = {slot.courseCode, slot.activityId + ""};
+                    conflicts.add(conflict);
                 }
             }
         }
-        return conflicts.toArray(new String[0]);
+        if(conflicts.isEmpty()){
+            return null;
+        }
+        return conflicts.toArray(new String[0][0]);
     }
 
     public boolean hasStudentEmail(String email) {

@@ -7,9 +7,7 @@ import model.activities.Lab;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 
 public class Course {
@@ -25,7 +23,7 @@ public class Course {
     private final int requiredLabs;
     private final PriorityQueue<Integer> availableIds = new PriorityQueue<>();
     private int nextId = 0;
-    private final List<Activity> activities = new ArrayList<>();
+    private final Map<Integer, Activity> activities = new HashMap<>();
 
     public Course(String courseCode, String name, String description, boolean requiresComputers,
                   String courseOrganiserName, String courseOrganiserEmail, String courseSecretaryName, String courseSecretaryEmail,
@@ -58,7 +56,7 @@ public class Course {
             default -> throw new IllegalArgumentException("Invalid activity type");
         };
 
-        activities.add(activity);
+        activities.put(id, activity);
     }
     public void removeActivities() {
         activities.clear();
@@ -71,30 +69,43 @@ public class Course {
     }
 
     public boolean hasActivity(int id) {
-        for (Activity activity : activities) {
-            if (activity.hasId(id)) {
-                return true;
-            }
-        }
-        return false;
+        return activities.containsKey(id);
     }
 
     public String getActivityAsString(int id) {
-        for (Activity activity : activities) {
-            if (activity.hasId(id)) {
-                return activity.toString();
-            }
+        return activities.get(id).toString();
+    }
+
+    public String getActivitiesAsString() {
+        StringBuilder activitiesList = new StringBuilder();
+        for (Activity activity : activities.values()) {
+            activitiesList.append(activity.toString());
         }
-        return null;
+        return activitiesList.toString();
     }
 
     public boolean isUnrecordedLecture(int activityId) {
-        for (Activity activity : activities) {
-            if (activity.hasId(activityId) && activity instanceof Lecture) {
-                return ((Lecture) activity).isRecorded();
-            }
-        }
-        return false;
+        return activities.get(activityId) instanceof Lecture &&
+                ((Lecture) activities.get(activityId)).isRecorded();
+    }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "courseCode='" + courseCode + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", requiresComputers=" + requiresComputers +
+                ", courseOrganiserName='" + courseOrganiserName + '\'' +
+                ", courseOrganiserEmail='" + courseOrganiserEmail + '\'' +
+                ", courseSecretaryName='" + courseSecretaryName + '\'' +
+                ", courseSecretaryEmail='" + courseSecretaryEmail + '\'' +
+                ", requiredTutorials=" + requiredTutorials +
+                ", requiredLabs=" + requiredLabs +
+                ", availableIds=" + availableIds +
+                ", nextId=" + nextId +
+                ", activities=" + activities +
+                '}';
     }
 
     public String getCourseCode() {
@@ -135,5 +146,9 @@ public class Course {
 
     public int getRequiredLabs() {
         return requiredLabs;
+    }
+
+    public Map<Integer,Activity> getActivities() {
+        return activities;
     }
 }

@@ -12,6 +12,13 @@ public class Lecture extends Activity{
         this.recorded = recorded;
     }
 
+    @Override
+    public String toString() {
+        return "Lecture{"  + super.toString() +
+                ", recorded=" + recorded +
+                '}';
+    }
+
     public boolean isRecorded() {
         return recorded;
     }

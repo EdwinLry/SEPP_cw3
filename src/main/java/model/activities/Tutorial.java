@@ -13,6 +13,13 @@ public class Tutorial extends Activity{
         this.capacity = capacity;
     }
 
+    @Override
+    public String toString() {
+        return "Tutorial{" + super.toString() +
+                ", capacity=" + capacity +
+                '}';
+    }
+
     public int getCapacity() {
         return capacity;
     }

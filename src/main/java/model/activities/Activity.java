@@ -28,6 +28,17 @@ public abstract class Activity {
         return this.id == id;
     }
 
+    @Override
+    public String toString() {
+        return "id=" + id +
+                ", startDate=" + startDate +
+                ", startTime=" + startTime +
+                ", endDate=" + endDate +
+                ", endTime=" + endTime +
+                ", location='" + location + '\'' +
+                ", day=" + day;
+    }
+
     public int getId() {
         return id;
     }

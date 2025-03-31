@@ -24,10 +24,6 @@ public class Logger {
     }
 
     public void log(long time, String userId, String actionName, String inputs, String status) {
-        String formattedTime = time.format(formatter);
-        String logEntry = String.format("[%s] User: %s, Action: %s, Inputs: %s, Status: %s",
-                formattedTime, userId, actionName, inputs, status);
-        // Add the log entry to the list (only logging; no printing)
-        logEntries.add(logEntry);
+        //TODO: use tinylog to log the message
     }
 }
