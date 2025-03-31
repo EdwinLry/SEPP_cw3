@@ -6,9 +6,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.DisplayName;
+
 public class TestMockEmailService {
 
     @Test
+    @DisplayName("Both valid emails")
     public void validEmails() {
         MockEmailService emailService = new MockEmailService();
         int result = emailService.sendEmail("sender@icloud.com", "recipient@cloud.com", "Subject", "Content");
@@ -16,6 +19,7 @@ public class TestMockEmailService {
     }
 
     @Test
+    @DisplayName("Sender is an invalid email address")
     public void invalidSenderEmail() {
         MockEmailService emailService = new MockEmailService();
         int result = emailService.sendEmail("invalid-sender", "recipient@icloud.com", "Subject", "Content");
@@ -23,6 +27,7 @@ public class TestMockEmailService {
     }
 
     @Test
+    @DisplayName("Sender is null")
     public void nullSenderEmail() {
         MockEmailService emailService = new MockEmailService();
         int result = emailService.sendEmail(null, "recipient@icloud.com", "Subject", "Body content");
@@ -30,6 +35,7 @@ public class TestMockEmailService {
     }
 
     @Test
+    @DisplayName("Recipient is an invalid email address")
     public void invalidRecipientEmail() {
         MockEmailService emailService = new MockEmailService();
         int result = emailService.sendEmail("sender@icloud.com", "invalid-reciepent", "Subject", "Content");
@@ -37,7 +43,8 @@ public class TestMockEmailService {
     }
 
     @Test
-    public void sendEmail_withNullRecipient_shouldReturnInvalidRecipientStatus() {
+    @DisplayName("Recipient is null")
+    public void nullRecipientEmail() {
         MockEmailService emailService = new MockEmailService();
         int result = emailService.sendEmail("sender@example.com", null, "Subject", "Content");
         assertEquals(EmailService.STATUS_INVALID_RECIPIENT_EMAIL, result, "Invalid recipient (2) when recipient is null.");
