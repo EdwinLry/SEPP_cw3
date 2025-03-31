@@ -3,9 +3,9 @@ package controller;
 import external.AuthenticationService;
 import external.EmailService;
 import model.*;
-import model.FAQ.FAQItem;
 import model.FAQ.FAQSection;
 import view.View;
+import utils.Logger;
 
 public class AdminStaffController extends StaffController {
     public AdminStaffController(SharedContext sharedContext, View view, AuthenticationService auth, EmailService email) {
@@ -85,12 +85,30 @@ public class AdminStaffController extends StaffController {
 
         String question = view.getInput("Enter the question for new FAQ item: ");
         if(question == null || question.isEmpty()){
+            Logger logger = Logger.getInstance();
+            logger.log(
+                System.currentTimeMillis(),
+                ((AuthenticatedUser) sharedContext.currentUser).getEmail(),
+                "addFAQItem",
+                currentSection.getTopic(),
+                "FAILURE"+" (Error: the question cannot be empty )"
+            );
+
             view.displayError("Question cannot be empty");
             return;
         }
 
         String answer = view.getInput("Enter the answer for new FAQ item: ");
         if(answer == null || answer.isEmpty()){
+            Logger logger = Logger.getInstance();
+            logger.log(
+                System.currentTimeMillis(),
+                ((AuthenticatedUser) sharedContext.currentUser).getEmail(),
+                "addFAQItem",
+                currentSection.getTopic(),
+                "FAILURE"+" (Error: the answer cannot be empty )"
+            );
+
             view.displayError("Answer cannot be empty");
             return;
         }
@@ -105,28 +123,24 @@ public class AdminStaffController extends StaffController {
                 return;
             }
 
+            // to do
+            //String courses = courseManager.ViewCourses();
+            //for (Course course : courseManager.checkCourseCode()) {
+            //    view.displayInfo(course.getCourseCode() + ": " + course.getCourseName());
+            //}
+        } else {
+            currentSection.addItem(question, answer);
         }
-        else currentSection.addItem(question, answer);
 
-        String emailSubject = "FAQ topic '" + currentSection.getTopic() + "' updated";
-        StringBuilder emailContentBuilder = new StringBuilder();
-        emailContentBuilder.append("Updated Q&As:");
-        for (FAQItem item : currentSection.getItems()) {
-            emailContentBuilder.append("\n\n");
-            emailContentBuilder.append("Q: ");
-            emailContentBuilder.append(item.getQuestion());
-            emailContentBuilder.append("\n");
-            emailContentBuilder.append("A: ");
-            emailContentBuilder.append(item.getAnswer());
-        }
-        String emailContent = emailContentBuilder.toString();
-
-        email.sendEmail(
+        Logger logger = Logger.getInstance();
+        logger.log(
+                System.currentTimeMillis(),
                 ((AuthenticatedUser) sharedContext.currentUser).getEmail(),
-                SharedContext.ADMIN_STAFF_EMAIL,
-                emailSubject,
-                emailContent
+                "addFAQItem",
+                currentSection.getTopic(),
+                "SUCCESS"+" (A new FAQ item was added)"
         );
+
         view.displaySuccess("Created new FAQ item");
     }
 
