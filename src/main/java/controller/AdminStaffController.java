@@ -6,6 +6,8 @@ import model.*;
 import model.FAQ.FAQSection;
 import view.View;
 import utils.Logger;
+import model.activities.Activity;
+import java.util.*;
 
 public class AdminStaffController extends StaffController {
     public AdminStaffController(SharedContext sharedContext, View view, AuthenticationService auth, EmailService email) {
@@ -117,17 +119,43 @@ public class AdminStaffController extends StaffController {
 
         if (addTag) {
             CourseManager courseManager = sharedContext.getCourseManager();
-            String fullCourseDetailsAsString = courseManager.ViewCourses();
-            if(fullCourseDetailsAsString.isEmpty()){
-                view.displayError("No courses available in the system");
-                return;
-            }
+            String courseDetails = courseManager.ViewCourses();
 
-            // to do
-            //String courses = courseManager.ViewCourses();
-            //for (Course course : courseManager.checkCourseCode()) {
-            //    view.displayInfo(course.getCourseCode() + ": " + course.getCourseName());
-            //}
+            String[] coursesSplit = courseDetails.split("\n");
+
+            for (String courseStr : coursesSplit) {
+                // define full course details as empty string
+                String fullCourseDetailsAsString = "";
+
+                // course is in the format "courseName - courseCode"
+                String[] courseDetailsSplit = courseStr.split(" - ");
+
+                Course courseName = courseManager.getCourse(courseDetailsSplit[0]);
+
+                // full list of activities for given course
+                Map<Integer, Activity> activities = courseName.getActivities();
+
+                // check if course has no activities
+                if (activities.isEmpty()) {
+                    view.displayError("No activities available for course " + courseName.getCourseCode());
+                    return;
+                }
+
+                // iterate through all activities and add to activity detail empty string
+                String fullActivityDetailsAsString = "";
+                for (Activity activity : activities.values()) {
+                    String activityDetailsAsString = activity.toString() + ", ";
+                    fullActivityDetailsAsString += activityDetailsAsString;
+                }
+
+                // concatenate course name and course code with activity details
+                fullCourseDetailsAsString = courseStr + fullActivityDetailsAsString;
+
+                if(fullCourseDetailsAsString.isEmpty()){
+                    view.displayError("No courses available in the system");
+                    return;
+                }
+            }
         } else {
             currentSection.addItem(question, answer);
         }

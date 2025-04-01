@@ -164,8 +164,6 @@ public class CourseManager {
         }
         return count;
     }
-    private Course getCourse(String courseCode) {
-        return courses.get(courseCode);
-    }
+    public Course getCourse(String courseCode) {return courses.get(courseCode);}
     private Map<String,Course> getCourses(){return courses;}
 }
