@@ -3,9 +3,9 @@ package controller;
 import external.AuthenticationService;
 import external.EmailService;
 import model.*;
-import model.FAQ.FAQItem;
 import model.FAQ.FAQSection;
 import view.View;
+import utils.Logger;
 
 public class AdminStaffController extends StaffController {
     public AdminStaffController(SharedContext sharedContext, View view, AuthenticationService auth, EmailService email) {
@@ -84,41 +84,63 @@ public class AdminStaffController extends StaffController {
         }
 
         String question = view.getInput("Enter the question for new FAQ item: ");
-        String answer = view.getInput("Enter the answer for new FAQ item: ");
-        String courseTag = view.getYesNoInput("Is this FAQ item specific to a course?") ? view.getInput("Enter course code: ") : null;
-        if (courseTag != null) {
-            //TODO: Add validation for course code after course implementation
-            currentSection.addItem(question, answer, courseTag);
-        }
-        else currentSection.addItem(question, answer);
-
-        String emailSubject = "FAQ topic '" + currentSection.getTopic() + "' updated";
-        StringBuilder emailContentBuilder = new StringBuilder();
-        emailContentBuilder.append("Updated Q&As:");
-        for (FAQItem item : currentSection.getItems()) {
-            emailContentBuilder.append("\n\n");
-            emailContentBuilder.append("Q: ");
-            emailContentBuilder.append(item.getQuestion());
-            emailContentBuilder.append("\n");
-            emailContentBuilder.append("A: ");
-            emailContentBuilder.append(item.getAnswer());
-        }
-        String emailContent = emailContentBuilder.toString();
-
-        email.sendEmail(
+        if(question == null || question.isEmpty()){
+            Logger logger = Logger.getInstance();
+            logger.log(
+                System.currentTimeMillis(),
                 ((AuthenticatedUser) sharedContext.currentUser).getEmail(),
-                SharedContext.ADMIN_STAFF_EMAIL,
-                emailSubject,
-                emailContent
-        );
-        for (String subscriberEmail : sharedContext.usersSubscribedToFAQTopic(currentSection.getTopic())) {
-            email.sendEmail(
-                    SharedContext.ADMIN_STAFF_EMAIL,
-                    subscriberEmail,
-                    emailSubject,
-                    emailContent
+                "addFAQItem",
+                currentSection.getTopic(),
+                "FAILURE"+" (Error: the question cannot be empty )"
             );
+
+            view.displayError("Question cannot be empty");
+            return;
         }
+
+        String answer = view.getInput("Enter the answer for new FAQ item: ");
+        if(answer == null || answer.isEmpty()){
+            Logger logger = Logger.getInstance();
+            logger.log(
+                System.currentTimeMillis(),
+                ((AuthenticatedUser) sharedContext.currentUser).getEmail(),
+                "addFAQItem",
+                currentSection.getTopic(),
+                "FAILURE"+" (Error: the answer cannot be empty )"
+            );
+
+            view.displayError("Answer cannot be empty");
+            return;
+        }
+
+        boolean addTag = view.getYesNoInput("Would you like to add a Course tag?");
+
+        if (addTag) {
+            CourseManager courseManager = sharedContext.getCourseManager();
+            String fullCourseDetailsAsString = courseManager.ViewCourses();
+            if(fullCourseDetailsAsString.isEmpty()){
+                view.displayError("No courses available in the system");
+                return;
+            }
+
+            // to do
+            //String courses = courseManager.ViewCourses();
+            //for (Course course : courseManager.checkCourseCode()) {
+            //    view.displayInfo(course.getCourseCode() + ": " + course.getCourseName());
+            //}
+        } else {
+            currentSection.addItem(question, answer);
+        }
+
+        Logger logger = Logger.getInstance();
+        logger.log(
+                System.currentTimeMillis(),
+                ((AuthenticatedUser) sharedContext.currentUser).getEmail(),
+                "addFAQItem",
+                currentSection.getTopic(),
+                "SUCCESS"+" (A new FAQ item was added)"
+        );
+
         view.displaySuccess("Created new FAQ item");
     }
 
@@ -162,5 +184,55 @@ public class AdminStaffController extends StaffController {
                 "Subject: " + inquiry.getSubject() + "\nPlease log into the Self Service Portal to review and respond to the inquiry."
         );
         view.displaySuccess("Inquiry has been reassigned");
+    }
+
+    public void manageCourses() {
+        while (true) {
+            view.displayInfo("[-1] Return to main menu");
+            view.displayInfo("[-2] Add course");
+            view.displayInfo("[-3] Remove course");
+            String input = view.getInput("Please choose an option: ");
+            try {
+                int optionNo = Integer.parseInt(input);
+
+                if (optionNo == -2) {
+                    addCourse();
+                } else if (optionNo == -1) {
+                    break;
+                } else if (optionNo == -3) {
+                    //TODO: Implement course removal
+                    break;
+                } else {
+                    view.displayError("Invalid option: " + optionNo);
+                }
+            } catch (NumberFormatException e) {
+                view.displayError("Invalid option: " + input);
+            }
+        }
+    }
+    private void addCourse() {
+        String courseCode = view.getInput("Enter course code: ");
+        if (sharedContext.getCourseManager().checkCourseCode(courseCode)) {
+            view.displayError("Course with the same code already exists");
+            return;
+        }
+        String courseName = view.getInput("Enter course name: ");
+        String courseDescription = view.getInput("Enter course description: ");
+        boolean requiresComputers = view.getYesNoInput("Does this course require computers?");
+        String courseOrganiserName = view.getInput("Enter course organiser name: ");
+        //TODO: Add email validation
+        String courseOrganiserEmail = view.getInput("Enter course organiser email: ");
+        String courseSecretaryName = view.getInput("Enter course secretary name: ");
+        String courseSecretaryEmail = view.getInput("Enter course secretary email: ");
+        try {
+            int requiredTutorials = Integer.parseInt(view.getInput("Enter required tutorials: "));
+            int requiredLabs = Integer.parseInt(view.getInput("Enter required labs: "));
+            if (sharedContext.getCourseManager().addCourse(courseCode, courseName, courseDescription, requiresComputers, courseOrganiserName, courseOrganiserEmail,
+                    courseSecretaryName, courseSecretaryEmail, requiredTutorials, requiredLabs)) {
+                view.displaySuccess("Course added successfully");
+            }
+        }catch (NumberFormatException e){
+            view.displayError("Invalid input for required tutorials or labs");
+        }
     }
 }

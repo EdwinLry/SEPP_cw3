@@ -31,6 +31,7 @@ public class MenuController extends Controller {
         LOGOUT,
         MANAGE_QUERIES,
         MANAGE_FAQ,
+        MANAGE_COURSE,
     }
 
     public void mainMenu() {
@@ -110,6 +111,7 @@ public class MenuController extends Controller {
             case LOGOUT -> new AuthenticatedUserController(sharedContext, view, auth, email).logout();
             case MANAGE_FAQ -> new AdminStaffController(sharedContext, view, auth, email).manageFAQ();
             case MANAGE_QUERIES -> new AdminStaffController(sharedContext, view, auth, email).manageInquiries();
+            case MANAGE_COURSE -> new AdminStaffController(sharedContext, view, auth, email).manageCourses();
         }
         return false;
     }
