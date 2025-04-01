@@ -19,6 +19,9 @@ public class CourseManager {
 
     private static View view;
 
+    /**
+     * @return The course list in "CourseCode - CourseName" format
+     */
     public String ViewCourses() {
         courseList.setLength(0);
         for (Course course : courses.values()) {
@@ -48,6 +51,11 @@ public class CourseManager {
         return true;
     }
 
+    /**
+     * Add an activity to a course
+     * @param courseCode The course code
+     * @param studentEmail The student's email
+     */
     public void addCourseToStudentTimetable(String studentEmail, String courseCode) {
         Course course = getCourse(courseCode);
         if(course == null){
@@ -159,4 +167,5 @@ public class CourseManager {
     private Course getCourse(String courseCode) {
         return courses.get(courseCode);
     }
+    private Map<String,Course> getCourses(){return courses;}
 }
