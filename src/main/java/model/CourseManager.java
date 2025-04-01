@@ -34,6 +34,10 @@ public class CourseManager {
         return courses.containsKey(courseCode);
     }
 
+    public boolean hasCourse(String courseCode) {
+        return courses.containsKey(courseCode);
+    }
+
     public boolean removeCourse(String courseCode) {
         if (courses.containsKey(courseCode)) {
             courses.remove(courseCode);

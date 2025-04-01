@@ -3,6 +3,7 @@ package controller;
 import external.AuthenticationService;
 import external.EmailService;
 import model.*;
+import model.FAQ.FAQItem;
 import model.FAQ.FAQSection;
 import view.View;
 import utils.Logger;
@@ -117,16 +118,18 @@ public class AdminStaffController extends StaffController {
 
         boolean addTag = view.getYesNoInput("Would you like to add a Course tag?");
 
+        String fullActivityDetailsAsString = "";
+
         if (addTag) {
             CourseManager courseManager = sharedContext.getCourseManager();
             String courseDetails = courseManager.ViewCourses();
 
             String[] coursesSplit = courseDetails.split("\n");
 
-            for (String courseStr : coursesSplit) {
-                // define full course details as empty string
-                String fullCourseDetailsAsString = "";
+            // define full course details as empty string
+            String fullCourseDetailsAsString = "";
 
+            for (String courseStr : coursesSplit) {
                 // course is in the format "courseName - courseCode"
                 String[] courseDetailsSplit = courseStr.split(" - ");
 
@@ -142,23 +145,56 @@ public class AdminStaffController extends StaffController {
                 }
 
                 // iterate through all activities and add to activity detail empty string
-                String fullActivityDetailsAsString = "";
                 for (Activity activity : activities.values()) {
                     String activityDetailsAsString = activity.toString() + ", ";
                     fullActivityDetailsAsString += activityDetailsAsString;
                 }
 
                 // concatenate course name and course code with activity details
-                fullCourseDetailsAsString = courseStr + fullActivityDetailsAsString;
+                fullCourseDetailsAsString = courseStr + "-" + fullActivityDetailsAsString;
+            }
 
-                if(fullCourseDetailsAsString.isEmpty()){
-                    view.displayError("No courses available in the system");
-                    return;
+            if (fullCourseDetailsAsString.isEmpty()){
+                view.displayError("No courses available in the system");
+                return;
+            } else {
+                view.displayInfo("Available courses: ");
+
+                while (!fullCourseDetailsAsString.isEmpty()) {
+                    String[] courseDetailsSplit = fullCourseDetailsAsString.split("-");
+
+                    String courseName = courseDetailsSplit[0];
+                    String courseCode = courseDetailsSplit[1];
+
+                    view.displayInfo(courseCode + " : " + courseName);
+                }
+
+                String courseTag = view.getInput("Enter course code to add as tag: ");
+
+                boolean hasCourse = courseManager.hasCourse(courseTag);
+
+                if (!hasCourse) {
+                    Logger logger = Logger.getInstance();
+                    logger.log(
+                            System.currentTimeMillis(),
+                            ((AuthenticatedUser) sharedContext.currentUser).getEmail(),
+                            "addFAQItem",
+                            currentSection.getTopic(),
+                            "FAILURE"+" (Error: the tag must correspond to a course code)"
+                    );
+
+                    view.displayError("The tag must correspond to a course code");
                 }
             }
+
+            // add FAQ item to FAQ section
+
         } else {
             currentSection.addItem(question, answer);
         }
+
+
+
 
         Logger logger = Logger.getInstance();
         logger.log(
