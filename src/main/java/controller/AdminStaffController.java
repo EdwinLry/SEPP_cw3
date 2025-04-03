@@ -3,7 +3,6 @@ package controller;
 import external.AuthenticationService;
 import external.EmailService;
 import model.*;
-import model.FAQ.FAQItem;
 import model.FAQ.FAQSection;
 import view.View;
 import utils.Logger;
@@ -131,7 +130,7 @@ public class AdminStaffController extends StaffController {
 
         if (addTag) {
             CourseManager courseManager = sharedContext.getCourseManager();
-            String courseDetails = courseManager.ViewCourses();
+            String courseDetails = courseManager.simpleCoursesDetails();
 
             String[] coursesSplit = courseDetails.split("\n");
 
@@ -200,7 +199,7 @@ public class AdminStaffController extends StaffController {
 
                 // get course code from user
                 courseTag = view.getInput("Enter course code to add as tag: ");
-                boolean hasCourse = courseManager.hasCourse(courseTag);
+                boolean hasCourse = courseManager.checkCourseCode(courseTag);
 
                 // check if course_code is valid
                 if (!hasCourse) {
@@ -326,7 +325,7 @@ public class AdminStaffController extends StaffController {
     }
     private void removeCourse() {
         view.displayInfo("Available courses:");
-        String courseList = sharedContext.getCourseManager().ViewCourses();
+        String courseList = sharedContext.getCourseManager().simpleCoursesDetails();
         if (courseList.isEmpty()) {
             view.displayInfo("No courses available.");
             return;

@@ -22,12 +22,15 @@ public class CourseManager {
     private final Map<String,Course> courses = new HashMap<>();
     private final List<Timetable> timetables = new ArrayList<>();
     private final StringBuilder courseList = new StringBuilder();
-    private static final View view = new TextUserInterface();
+    private final View view;
 
+    public CourseManager(View view) {
+        this.view = view;
+    }
     /**
      * @return The course list in "CourseCode - CourseName" format
      */
-    public String ViewCourses() {//need to refactor name
+    public String simpleCoursesDetails() {//need to refactor name
         courseList.setLength(0);
         for (Course course : courses.values()) {
             courseList.append(course.getCourseCode()).append(" - ").append(course.getName()).append("\n");
@@ -43,9 +46,6 @@ public class CourseManager {
         return courses.containsKey(courseCode);
     }
 
-    public boolean hasCourse(String courseCode) {
-        return courses.containsKey(courseCode);
-    }
     /**
      * Remove a course from the course list
      * @param courseCode The course code to remove
