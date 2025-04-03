@@ -33,7 +33,7 @@ public class AddCourseToTimetableSystemTests extends TUITest{
      */
     @Test
     public void addCourseSuccess() throws URISyntaxException, IOException, ParseException {
-        SharedContext context = new SharedContext();
+
         loginAsStudent(context);
 
         setMockInput("4", "1", "INF1B", "-1");
@@ -53,7 +53,7 @@ public class AddCourseToTimetableSystemTests extends TUITest{
      */
     @Test
     public void addCourseWrongCode() throws URISyntaxException, IOException, ParseException {
-        SharedContext context = new SharedContext();
+
         loginAsStudent(context);
 
         setMockInput("4", "1", "Not-a-course");
