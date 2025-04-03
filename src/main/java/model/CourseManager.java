@@ -25,15 +25,17 @@ public class CourseManager {
     private static final View view = new TextUserInterface();
 
     /**
-     * @return The course list in "CourseCode - CourseName" format
+     * Add a course to the course list
      */
-    public String ViewCourses() {//need to refactor name
-        courseList.setLength(0);
-        for (Course course : courses.values()) {
-            courseList.append(course.getCourseCode()).append(" - ").append(course.getName()).append("\n");
-        }
-        return courseList.toString();
+    public boolean addCourse(String code, String name, String description, boolean requiresComputers,
+                             String COName, String COEmail, String CSName, String CSEmail,
+                             int reqTutorials, int reqLabs) {
+        Course newCourse = new Course(code, name, description, requiresComputers, COName, COEmail,
+                CSName, CSEmail, reqTutorials, reqLabs);
+        courses.put(code, newCourse);
+        return true;
     }
+
     /**
      * Check if a course code is valid
      * @param courseCode The course code to check
@@ -43,9 +45,6 @@ public class CourseManager {
         return courses.containsKey(courseCode);
     }
 
-    public boolean hasCourse(String courseCode) {
-        return courses.containsKey(courseCode);
-    }
     /**
      * Remove a course from the course list
      * @param courseCode The course code to remove
@@ -57,17 +56,6 @@ public class CourseManager {
             return true;
         }
         return false;
-    }
-    /**
-     * Add a course to the course list
-     */
-    public boolean addCourse(String code, String name, String description, boolean requiresComputers,
-                             String COName, String COEmail, String CSName, String CSEmail,
-                             int reqTutorials, int reqLabs) {
-        Course newCourse = new Course(code, name, description, requiresComputers, COName, COEmail,
-                CSName, CSEmail, reqTutorials, reqLabs);
-        courses.put(code, newCourse);
-        return true;
     }
 
     /**
@@ -138,7 +126,7 @@ public class CourseManager {
         int[] chosenActivities = currentTimeTable.chosenActivities(course.getCourseCode());
         Map<Integer,Activity> activities = course.getActivities();
 
-        int count = CheckChosenTutorials(activities,chosenActivities);
+        int count = checkChosenTutorials(activities,chosenActivities);
         if(count < course.getRequiredTutorials()){
             Logger logger = Logger.getInstance();
             logger.log(System.currentTimeMillis(),studentEmail,"addCoursetoStudentTimetable",
@@ -148,7 +136,7 @@ public class CourseManager {
             view.displayError("You have to choose " + course.getRequiredTutorials() + " tutorials for this course");
         }
 
-        count = CheckChosenLabs(activities,chosenActivities);
+        count = checkChosenLabs(activities,chosenActivities);
         if(count < course.getRequiredLabs()){
             Logger logger = Logger.getInstance();
             logger.log(System.currentTimeMillis(),studentEmail,"addCoursetoStudentTimetable",
@@ -163,6 +151,7 @@ public class CourseManager {
                 studentEmail+courseCode,"SUCCESS");
         view.displaySuccess("The course was successfully added to your timetable");
     }
+
     /**
      * Adds an activity to a student timetable
      * @param studentEmail The student's email
@@ -208,7 +197,32 @@ public class CourseManager {
         }
     }
 
-    private int CheckChosenTutorials(Map<Integer,Activity> activities, int[] chosenActivities){
+    public boolean hasCourse(String courseCode) {
+        return courses.containsKey(courseCode);
+    }
+
+    // todo choose one of these functions
+    /**
+     * @return The course list in "CourseCode - CourseName" format
+     */
+    public String ViewCourses() {//need to refactor name
+        courseList.setLength(0);
+        for (Course course : courses.values()) {
+            courseList.append(course.getCourseCode()).append(" - ").append(course.getName()).append("\n");
+        }
+        return courseList.toString();
+    }
+    public void viewCourses(){
+        for(Course course : courses.values()){
+            view.displayCourse(course);
+        }
+    }
+
+    public void viewCourse(String name){
+        view.displayCourse(courses.get(name));
+    }
+
+    private int checkChosenTutorials(Map<Integer,Activity> activities, int[] chosenActivities){
         int count = 0;
         for(int tutorialId : chosenActivities){
             if(activities.get(tutorialId) instanceof Tutorial){
@@ -218,7 +232,7 @@ public class CourseManager {
         return count;
     }
 
-    private int CheckChosenLabs(Map<Integer,Activity> activities, int[] chosenActivities){
+    private int checkChosenLabs(Map<Integer,Activity> activities, int[] chosenActivities){
         int count = 0;
         for(int labId : chosenActivities){
             if(activities.get(labId) instanceof Lab){
@@ -227,15 +241,21 @@ public class CourseManager {
         }
         return count;
     }
-    public Course getCourse(String courseCode) {return courses.get(courseCode);}
-    /**
-     * Display the timetable for a student
-     */
-    public void viewTimetable(String email){
+
+    private List<Timetable> getTimetable(String studentEmail){
+        for(Timetable timetable : timetables){
+            if(timetable.hasStudentEmail(studentEmail)){
+                return timetables;
+            }
+        }
+        return null;
+    }
+
+    public void viewTimetable(String studentEmail){
         Timetable currentTimeTable = null;
         boolean found = false;
         for (Timetable timetable : timetables) {
-            if (timetable.hasStudentEmail(email)) {
+            if (timetable.hasStudentEmail(studentEmail)) {
                 currentTimeTable = timetable;
                 found = true;
                 break;
@@ -247,21 +267,11 @@ public class CourseManager {
         }
         view.displayTimetable(currentTimeTable);
     }
-    public void viewCourses(){
-        for(Course course : courses.values()){
-            view.displayCourse(course);
-        }
-    }
-    public void viewCourse(String name){
-        view.displayCourse(courses.get(name));
-    }
+
+    public Course getCourse(String courseCode) {return courses.get(courseCode);}
+    /**
+     * Display the timetable for a student
+     */
+
     private Map<String,Course> getCourses(){return courses;}
-    public List<Timetable> getTimetable(String email){
-        for(Timetable timetable : timetables){
-            if(timetable.hasStudentEmail(email)){
-                return timetables;
-            }
-        }
-        return null;
-    }
 }
