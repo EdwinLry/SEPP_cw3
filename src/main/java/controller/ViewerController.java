@@ -10,7 +10,26 @@ public class ViewerController extends Controller{
         super(sharedContext, view, auth, email);
     }
 
-    public void viewCourses() {
+    public void viewCoursesMenu() {
+        boolean endLoop = false;
+        while (!endLoop) {
+            view.displayInfo("[1]View all courses");
+            view.displayInfo("[2]View specific course");
+            view.displayInfo("[3]Back");
+
+            String choice = view.getInput("Please enter your choice: ");
+            switch (choice) {
+                case "1" -> viewCourses();
+                case "2" -> {
+                    String courseCode = view.getInput("Enter the course code: ");
+                    viewSpecificCourse(courseCode);
+                }
+                case "3" -> endLoop = true;
+                default -> view.displayError("Invalid choice. Please try again.");
+            }
+        }
+    }
+    private void viewCourses() {
         String courseList = sharedContext.courseManager.ViewCourses();
         if (courseList.isEmpty()) {
             view.displayInfo("No courses available.");
@@ -20,7 +39,7 @@ public class ViewerController extends Controller{
         }
     }
 
-    public void viewCourseDetails(String courseCode) {
+    private void viewSpecificCourse(String courseCode) {
         if (sharedContext.courseManager.hasCourse(courseCode)) {
             view.displayInfo("Course Details:\n");
             view.displayCourse(sharedContext.courseManager.getCourse(courseCode));

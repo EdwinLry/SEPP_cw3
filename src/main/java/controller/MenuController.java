@@ -14,6 +14,7 @@ public class MenuController extends Controller {
         LOGIN,
         CONSULT_FAQ,
         CONTACT_STAFF,
+        VIEW_COURSES,
     }
 
     public enum StudentMainMenuOption {
@@ -70,6 +71,7 @@ public class MenuController extends Controller {
             case LOGIN -> new GuestController(sharedContext, view, auth, email).login();
             case CONSULT_FAQ -> new InquirerController(sharedContext, view, auth, email).consultFAQ();
             case CONTACT_STAFF -> new InquirerController(sharedContext, view, auth, email).contactStaff();
+            case VIEW_COURSES -> new ViewerController(sharedContext, view, auth, email).viewCoursesMenu();
         }
         return false;
     }
