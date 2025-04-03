@@ -11,6 +11,12 @@ import model.activities.Tutorial;
 import utils.Logger;
 import view.*;
 
+/**
+ * CourseManager is responsible for managing courses, activities, and student timetables.
+ * It allows adding, removing, and viewing of. courses and activities.
+ * It also handles the assignment of courses to students and checks for conflicts in their timetables.
+ */
+
 public class CourseManager {
 
     private final Map<String,Course> courses = new HashMap<>();
@@ -28,7 +34,11 @@ public class CourseManager {
         }
         return courseList.toString();
     }
-
+    /**
+     * Check if a course code is valid
+     * @param courseCode The course code to check
+     * @return true if the course code is valid, false otherwise
+     */
     public boolean checkCourseCode(String courseCode) {
         return courses.containsKey(courseCode);
     }
@@ -36,7 +46,11 @@ public class CourseManager {
     public boolean hasCourse(String courseCode) {
         return courses.containsKey(courseCode);
     }
-
+    /**
+     * Remove a course from the course list
+     * @param courseCode The course code to remove
+     * @return true if the course was removed, false otherwise
+     */
     public boolean removeCourse(String courseCode) {
         if (courses.containsKey(courseCode)) {
             courses.remove(courseCode);
@@ -44,7 +58,9 @@ public class CourseManager {
         }
         return false;
     }
-
+    /**
+     * Add a course to the course list
+     */
     public boolean addCourse(String code, String name, String description, boolean requiresComputers,
                              String COName, String COEmail, String CSName, String CSEmail,
                              int reqTutorials, int reqLabs) {
@@ -55,7 +71,7 @@ public class CourseManager {
     }
 
     /**
-     * Add an activity to a course
+     * Add an activity to a course, display errors if lecture conflicts appears
      * @param courseCode The course code
      * @param studentEmail The student's email
      */
@@ -147,7 +163,12 @@ public class CourseManager {
                 studentEmail+courseCode,"SUCCESS");
         view.displaySuccess("The course was successfully added to your timetable");
     }
-
+    /**
+     * Adds an activity to a student timetable
+     * @param studentEmail The student's email
+     * @param courseCode The course code
+     * @param activityId The activity ID
+     */
     public void chooseActivityForCourse(String studentEmail, String courseCode, int activityId) {
         Course course = getCourse(courseCode);
         if (course == null) {
@@ -207,7 +228,9 @@ public class CourseManager {
         return count;
     }
     public Course getCourse(String courseCode) {return courses.get(courseCode);}
-
+    /**
+     * Display the timetable for a student
+     */
     public void viewTimetable(String email){
         Timetable currentTimeTable = null;
         boolean found = false;
