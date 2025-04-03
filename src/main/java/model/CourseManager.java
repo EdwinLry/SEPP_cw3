@@ -168,5 +168,9 @@ public class CourseManager {
         return count;
     }
     public Course getCourse(String courseCode) {return courses.get(courseCode);}
+
+    public void viewTimetable(String email){
+
+    }
     private Map<String,Course> getCourses(){return courses;}
 }
