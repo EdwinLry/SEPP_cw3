@@ -22,7 +22,11 @@ public class CourseManager {
     private final Map<String,Course> courses = new HashMap<>();
     private final List<Timetable> timetables = new ArrayList<>();
     private final StringBuilder courseList = new StringBuilder();
-    private static final View view = new TextUserInterface();
+    private final View view;
+
+    public CourseManager(View view) {
+        this.view = view;
+    }
 
     /**
      * Add a course to the course list
