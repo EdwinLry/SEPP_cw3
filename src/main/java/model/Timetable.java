@@ -49,8 +49,8 @@ public class Timetable {
                                    LocalDate endDate, LocalTime endTime) {
         List<String[]> conflicts = new ArrayList<>();
         for (TimeSlot slot : timeSlots) {
-            if (slot.getStartDate().isBefore(endDate) && slot.getEndDate().isAfter(startDate)) {
-                if (slot.getStartTime().isBefore(endTime) && slot.getEndTime().isAfter(startTime)) {
+            if (slot.getStartDate().isBefore(endDate) || slot.getEndDate().isAfter(startDate)) {
+                if (slot.getStartTime().isBefore(endTime) || slot.getEndTime().isAfter(startTime)) {
                     String[] conflict = {slot.courseCode, slot.activityId + ""};
                     conflicts.add(conflict);
                 }
