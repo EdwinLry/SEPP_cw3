@@ -327,6 +327,9 @@ public class AdminStaffController extends StaffController {
     private void removeCourse() {
         view.displayInfo("Available courses:");
         String courseList = sharedContext.getCourseManager().ViewCourses();
+
+        Logger logger = Logger.getInstance();
+
         if (courseList.isEmpty()) {
             view.displayInfo("No courses available.");
             return;
@@ -336,8 +339,22 @@ public class AdminStaffController extends StaffController {
         String courseCode = view.getInput("Enter course code: ");
         if (sharedContext.getCourseManager().removeCourse(courseCode)) {
             view.displaySuccess("Course removed successfully");
+            logger.log(
+                    System.currentTimeMillis(),
+                    ((AuthenticatedUser) sharedContext.currentUser).getEmail(),
+                    "removeCourse",
+                    courseCode,
+                    "SUCCESS" + " (Course removed successfully)"
+            );
         } else {
             view.displayError("Course not found");
+            logger.log(
+                    System.currentTimeMillis(),
+                    ((AuthenticatedUser) sharedContext.currentUser).getEmail(),
+                    "removeCourse",
+                    courseCode,
+                    "FAILURE" + " (Error: Course could not be removed)"
+            );
         }
     }
     private void addActivityToCourse() {
