@@ -3,6 +3,7 @@ package utils;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import static org.tinylog.Logger.*;
 
 public class Logger {
     // Singleton instance
@@ -24,6 +25,7 @@ public class Logger {
     }
 
     public void log(long time, String userId, String actionName, String inputs, String status) {
-        //TODO: use tinylog to log the message
+        info("Time: {}, User ID: {}, Action: {}, Inputs: {}, Status: {}",
+                time, userId, actionName, inputs, status);
     }
 }
