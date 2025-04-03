@@ -76,8 +76,6 @@ public class AddFAQQASystemTests extends TUITest {
 
         assertOutputContains("Created topic 'Topic 1'");
         assertOutputContains("Created new FAQ item");
-        // add course
-        // add faq q with tag
     }
 
     /**

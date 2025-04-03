@@ -13,9 +13,9 @@ public class ViewerController extends Controller{
     public void viewCoursesMenu() {
         boolean endLoop = false;
         while (!endLoop) {
-            view.displayInfo("[1]View all courses");
-            view.displayInfo("[2]View specific course");
-            view.displayInfo("[3]Back");
+            view.displayInfo("[1] View all courses");
+            view.displayInfo("[2] View specific course");
+            view.displayInfo("[3] Back");
 
             String choice = view.getInput("Please enter your choice: ");
             switch (choice) {

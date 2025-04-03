@@ -21,6 +21,8 @@ public class MenuController extends Controller {
         LOGOUT,
         CONSULT_FAQ,
         CONTACT_STAFF,
+        VIEW_COURSES,
+        MANAGE_TIMETABLE,
     }
 
     public enum TeachingStaffMainMenuOption {
@@ -86,6 +88,8 @@ public class MenuController extends Controller {
             case LOGOUT -> new AuthenticatedUserController(sharedContext, view, auth, email).logout();
             case CONSULT_FAQ -> new InquirerController(sharedContext, view, auth, email).consultFAQ();
             case CONTACT_STAFF -> new InquirerController(sharedContext, view, auth, email).contactStaff();
+            case MANAGE_TIMETABLE -> new StudentController(sharedContext, view, auth, email).manageTimetable();
+            case VIEW_COURSES -> new ViewerController(sharedContext, view, auth, email).viewCoursesMenu();
         }
         return false;
     }
