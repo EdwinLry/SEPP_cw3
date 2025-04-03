@@ -31,11 +31,11 @@ public class AddFAQQASystemTests extends TUITest {
         SharedContext context = new SharedContext();
         loginAsAdminStaff(context);
 
-        setMockInput("2", "-2",             // Go to manage FAQ → Add FAQ
-                "Topic 1",     // New topic
-                "Question 1?",    // Question
-                "Answer 1", // Answer
-                "n", "-1");                  // No course tag
+        setMockInput("2", "-2",
+                "Topic 1",
+                "Question 1?",
+                "Answer 1",
+                "n", "-1");
 
         AdminStaffController controller = new AdminStaffController(
                 context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
