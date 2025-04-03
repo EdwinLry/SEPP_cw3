@@ -86,6 +86,7 @@ public class AdminStaffController extends StaffController {
             currentSection = newSection;
         }
 
+        // enter question for FAQ
         String question = view.getInput("Enter the question for new FAQ item: ");
         if(question == null || question.isEmpty()){
             Logger logger = Logger.getInstance();
@@ -101,6 +102,7 @@ public class AdminStaffController extends StaffController {
             return;
         }
 
+        // enter answer for FAQ
         String answer = view.getInput("Enter the answer for new FAQ item: ");
         if(answer == null || answer.isEmpty()){
             Logger logger = Logger.getInstance();
@@ -116,10 +118,11 @@ public class AdminStaffController extends StaffController {
             return;
         }
 
+        // check if user wants to add a course tag
         boolean addTag = view.getYesNoInput("Would you like to add a Course tag?");
 
-        String fullActivityDetailsAsString = "";
 
+        // if user wants to add a course tag, check if there are any courses available
         if (addTag) {
             CourseManager courseManager = sharedContext.getCourseManager();
             String courseDetails = courseManager.ViewCourses();
@@ -134,11 +137,11 @@ public class AdminStaffController extends StaffController {
                 String[] courseDetailsSplit = courseStr.split(" - ");
 
                 Course courseName = courseManager.getCourse(courseDetailsSplit[0]);
+                String fullActivityDetailsAsString = "";
 
                 // full list of activities for given course
                 Map<Integer, Activity> activities = courseName.getActivities();
 
-                // check if course has no activities
                 if (activities.isEmpty()) {
                     view.displayError("No activities available for course " + courseName.getCourseCode());
                     return;
@@ -146,22 +149,31 @@ public class AdminStaffController extends StaffController {
 
                 // iterate through all activities and add to activity detail empty string
                 for (Activity activity : activities.values()) {
-                    String activityDetailsAsString = activity.toString() + ", ";
+                    String activityDetailsAsString = activity.toString() + ";";
                     fullActivityDetailsAsString += activityDetailsAsString;
                 }
 
                 // concatenate course name and course code with activity details
-                fullCourseDetailsAsString = courseStr + "-" + fullActivityDetailsAsString;
+                fullCourseDetailsAsString = courseStr + "-" + fullActivityDetailsAsString + "\n";
+
+                // fullCourseDetailsAsString is now in the format courseName - courseCode - activityDetails;
+                // activityDetails; ...
             }
 
-            if (fullCourseDetailsAsString.isEmpty()){
+            String courseTag;
+
+            // check if there are any courses available
+            if (fullCourseDetailsAsString.isEmpty()) {
                 view.displayError("No courses available in the system");
                 return;
             } else {
                 view.displayInfo("Available courses: ");
 
-                while (!fullCourseDetailsAsString.isEmpty()) {
-                    String[] courseDetailsSplit = fullCourseDetailsAsString.split("-");
+                String[] coursesAsStr = fullCourseDetailsAsString.split("\n");
+
+                for (String course : coursesAsStr) {
+                    // courseDetailsSplit is in the format "courseName - courseCode - allActivityDetails"
+                    String[] courseDetailsSplit = course.split(" - ");
 
                     String courseName = courseDetailsSplit[0];
                     String courseCode = courseDetailsSplit[1];
@@ -169,10 +181,12 @@ public class AdminStaffController extends StaffController {
                     view.displayInfo(courseCode + " : " + courseName);
                 }
 
-                String courseTag = view.getInput("Enter course code to add as tag: ");
-
+                // get course code from user
+                courseTag = view.getInput("Enter course code to add as tag: ");
                 boolean hasCourse = courseManager.hasCourse(courseTag);
 
+                // check if course code is valid
+                // todo: make it repeat
                 if (!hasCourse) {
                     Logger logger = Logger.getInstance();
                     logger.log(
@@ -180,7 +194,7 @@ public class AdminStaffController extends StaffController {
                             ((AuthenticatedUser) sharedContext.currentUser).getEmail(),
                             "addFAQItem",
                             currentSection.getTopic(),
-                            "FAILURE"+" (Error: the tag must correspond to a course code)"
+                            "FAILURE" + " (Error: the tag must correspond to a course code)"
                     );
 
                     view.displayError("The tag must correspond to a course code");
@@ -188,13 +202,11 @@ public class AdminStaffController extends StaffController {
             }
 
             // add FAQ item to FAQ section
-
+            currentSection.addItem(question, answer, courseTag);
         } else {
+            // add FAQ item to FAQ section without course tag
             currentSection.addItem(question, answer);
         }
-
-
-
 
         Logger logger = Logger.getInstance();
         logger.log(
@@ -205,9 +217,8 @@ public class AdminStaffController extends StaffController {
                 "SUCCESS"+" (A new FAQ item was added)"
         );
 
-        view.displaySuccess("Created new FAQ item");
+        view.displaySuccess("The new FAQ item was added ");
     }
-
     public void manageInquiries() {
         String[] inquiryTitles = getInquiryTitles(sharedContext.inquiries);
 
@@ -238,7 +249,6 @@ public class AdminStaffController extends StaffController {
             }
         }
     }
-
     private void redirectInquiry(Inquiry inquiry) {
         inquiry.setAssignedTo(view.getInput("Enter assignee email: "));
         email.sendEmail(
@@ -249,7 +259,6 @@ public class AdminStaffController extends StaffController {
         );
         view.displaySuccess("Inquiry has been reassigned");
     }
-
     public void manageCourses() {
         while (true) {
             view.displayInfo("[-1] Return to main menu");
