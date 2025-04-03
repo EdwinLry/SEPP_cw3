@@ -1,11 +1,9 @@
 package model.FAQ;
 
 public class FAQItem {
-
     private final int id;
     private final String question;
     private final String answer;
-
     private final String courseTag;
 
     public FAQItem(int id, String question, String answer) {

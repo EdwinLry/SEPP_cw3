@@ -28,10 +28,10 @@ public class FAQManager {
         } else {
             view.displayError("Invalid id.");
         }
-        promoteSection(section);
+        promoteSubsections(section);
     }
 
-    private void promoteSection(FAQSection section) {
+    private void promoteSubsections(FAQSection section) {
         if (section.getParent() == null) {
             return;
         }
