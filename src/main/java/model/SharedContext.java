@@ -1,5 +1,8 @@
 package model;
 
+import view.TextUserInterface;
+import view.View;
+
 import java.util.*;
 
 public class SharedContext {
@@ -15,7 +18,8 @@ public class SharedContext {
         this.currentUser = new Guest();
         this.inquiries = new ArrayList<>();
         faqManager = new FAQManager();
-        courseManager = new CourseManager();
+        View view = new TextUserInterface();
+        courseManager = new CourseManager(view);
     }
 
     public FAQManager getFAQ() {

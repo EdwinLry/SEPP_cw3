@@ -30,7 +30,7 @@ public class ViewerController extends Controller{
         }
     }
     private void viewCourses() {
-        String courseList = sharedContext.courseManager.ViewCourses();
+        String courseList = sharedContext.courseManager.simpleCoursesDetails();
         if (courseList.isEmpty()) {
             view.displayInfo("No courses available.");
         } else {
@@ -40,9 +40,9 @@ public class ViewerController extends Controller{
     }
 
     private void viewSpecificCourse(String courseCode) {
-        if (sharedContext.courseManager.hasCourse(courseCode)) {
+        if (sharedContext.courseManager.checkCourseCode(courseCode)) {
             view.displayInfo("Course Details:\n");
-            view.displayCourse(sharedContext.courseManager.getCourse(courseCode));
+            sharedContext.courseManager.viewSpecificCourse(courseCode);
         } else {
             view.displayError("Course not found.");
         }
