@@ -14,7 +14,6 @@ public class AdminStaffController extends StaffController {
     public AdminStaffController(SharedContext sharedContext, View view, AuthenticationService auth, EmailService email) {
         super(sharedContext, view, auth, email);
     }
-
     public void manageFAQ() {
         FAQSection currentSection = null;
 
@@ -55,20 +54,25 @@ public class AdminStaffController extends StaffController {
             }
         }
     }
-
     private void addFAQItem(FAQSection currentSection) {
+        // dislay what the user is doing
+        view.displayInfo("=== Add New FAQ Question-Answer Pair===");
+
         // When adding an item at root of FAQ, creating a section is mandatory
         boolean createSection = (currentSection == null);
         if (!createSection) {
             createSection = view.getYesNoInput("Would you like to create a new topic for the FAQ item?");
         }
 
+        // if user wants to create a new section, get the topic title
         if (createSection) {
             String newTopic = view.getInput("Enter new topic title: ");
             if (newTopic == null || newTopic.isEmpty()){
                 view.displayError("Topic cannot be empty");
                 return;
             }
+
+            // check if topic already exists
             FAQSection newSection = new FAQSection(newTopic);
             if (currentSection == null) {
                 if (sharedContext.getFAQ().getSections().stream().anyMatch(section -> section.getTopic().equals(newTopic))) {
@@ -90,6 +94,8 @@ public class AdminStaffController extends StaffController {
             currentSection = newSection;
         }
 
+        String FAQSectionTopic = currentSection.getTopic();
+
         // enter question for FAQ
         String question = view.getInput("Enter the question: ");
         if(question == null || question.isEmpty()){
@@ -98,7 +104,7 @@ public class AdminStaffController extends StaffController {
                 System.currentTimeMillis(),
                 ((AuthenticatedUser) sharedContext.currentUser).getEmail(),
                 "addFAQItem",
-                currentSection.getTopic(),
+                FAQSectionTopic,
                 "FAILURE"+" (Error: the question cannot be empty )"
             );
             view.displayError("Question cannot be empty");
@@ -113,7 +119,7 @@ public class AdminStaffController extends StaffController {
                 System.currentTimeMillis(),
                 ((AuthenticatedUser) sharedContext.currentUser).getEmail(),
                 "addFAQItem",
-                currentSection.getTopic(),
+                FAQSectionTopic,
                 "FAILURE"+" (Error: the answer cannot be empty )"
             );
             view.displayError("Answer cannot be empty");
@@ -199,7 +205,7 @@ public class AdminStaffController extends StaffController {
                             System.currentTimeMillis(),
                             ((AuthenticatedUser) sharedContext.currentUser).getEmail(),
                             "addFAQItem",
-                            currentSection.getTopic(),
+                            FAQSectionTopic,
                             "FAILURE" + " (Error: the tag must correspond to a course code)"
                     );
 
@@ -220,7 +226,7 @@ public class AdminStaffController extends StaffController {
                 System.currentTimeMillis(),
                 ((AuthenticatedUser) sharedContext.currentUser).getEmail(),
                 "addFAQItem",
-                currentSection.getTopic(),
+                FAQSectionTopic,
                 "SUCCESS"+" (A new FAQ item was added)"
         );
 
