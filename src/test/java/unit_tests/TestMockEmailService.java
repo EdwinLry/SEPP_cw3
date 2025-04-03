@@ -15,7 +15,7 @@ public class TestMockEmailService {
     public void validEmails() {
         MockEmailService emailService = new MockEmailService();
         int result = emailService.sendEmail("sender@icloud.com", "recipient@cloud.com", "Subject", "Content");
-        assertEquals(EmailService.STATUS_SUCCESS, result, "Success (0) when both emails are valid.");
+        assertEquals(EmailService.STATUS_SUCCESS, result, "Success status (0) when both emails are valid.");
     }
 
     @Test
@@ -23,7 +23,7 @@ public class TestMockEmailService {
     public void invalidSenderEmail() {
         MockEmailService emailService = new MockEmailService();
         int result = emailService.sendEmail("invalid-sender", "recipient@icloud.com", "Subject", "Content");
-        assertEquals(EmailService.STATUS_INVALID_SENDER_EMAIL, result, "Invalid sender (1) when sender is invalid.");
+        assertEquals(EmailService.STATUS_INVALID_SENDER_EMAIL, result, "Invalid sender status (1) when sender is invalid.");
     }
 
     @Test
@@ -31,7 +31,7 @@ public class TestMockEmailService {
     public void nullSenderEmail() {
         MockEmailService emailService = new MockEmailService();
         int result = emailService.sendEmail(null, "recipient@icloud.com", "Subject", "Body content");
-        assertEquals(EmailService.STATUS_INVALID_SENDER_EMAIL, result, "Invalid sender (1) when sender is null.");
+        assertEquals(EmailService.STATUS_INVALID_SENDER_EMAIL, result, "Invalid sender status (1) when sender is null.");
     }
 
     @Test
@@ -39,7 +39,7 @@ public class TestMockEmailService {
     public void invalidRecipientEmail() {
         MockEmailService emailService = new MockEmailService();
         int result = emailService.sendEmail("sender@icloud.com", "invalid-reciepent", "Subject", "Content");
-        assertEquals(EmailService.STATUS_INVALID_RECIPIENT_EMAIL, result, "Invalid recipient (2) when recipient is invalid.");
+        assertEquals(EmailService.STATUS_INVALID_RECIPIENT_EMAIL, result, "Invalid recipient status (2) when recipient is invalid.");
     }
 
     @Test
@@ -47,6 +47,6 @@ public class TestMockEmailService {
     public void nullRecipientEmail() {
         MockEmailService emailService = new MockEmailService();
         int result = emailService.sendEmail("sender@example.com", null, "Subject", "Content");
-        assertEquals(EmailService.STATUS_INVALID_RECIPIENT_EMAIL, result, "Invalid recipient (2) when recipient is null.");
+        assertEquals(EmailService.STATUS_INVALID_RECIPIENT_EMAIL, result, "Invalid recipient status (2) when recipient is null.");
     }
 }
