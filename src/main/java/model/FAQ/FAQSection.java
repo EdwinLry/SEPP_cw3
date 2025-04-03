@@ -22,10 +22,6 @@ public class FAQSection {
         section.parent = this;
     }
 
-    public List<FAQSection> getSubsections() {
-        return subsections;
-    }
-
     public void addItem(String question, String answer) {
         if (freeIds.isEmpty()) {
             items.add(new FAQItem(nextid++, question, answer));
@@ -42,13 +38,13 @@ public class FAQSection {
         }
     }
 
-    public boolean removeItem(int index) {
-        if (index < 0 || index >= items.size()) {
+    public boolean removeItem(int itemId) {
+        if (itemId < 0 || itemId >= items.size()) {
             return false;
         }
         for(FAQItem item : items) {
-            if (item.getId() == index) {
-                freeIds.add(index);
+            if (item.getId() == itemId) {
+                freeIds.add(itemId);
                 items.remove(item);
                 return true;
             }
@@ -65,9 +61,14 @@ public class FAQSection {
         return null;
     }
 
-    public boolean hadTopic(String topic){
+    public boolean hasTopic(String topic){
         return this.topic.equals(topic);
     }
+
+    public List<FAQSection> getSubsections() {
+        return subsections;
+    }
+
     public String getTopic() {
         return topic;
     }
