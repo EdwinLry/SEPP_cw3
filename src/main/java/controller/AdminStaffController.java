@@ -237,6 +237,7 @@ public class AdminStaffController extends StaffController {
 
         view.displaySuccess("The new FAQ item was added ");
     }
+    private void removeFAQItem(FAQSection currentSection) {}
     public void manageInquiries() {
         String[] inquiryTitles = getInquiryTitles(sharedContext.inquiries);
 
@@ -325,5 +326,7 @@ public class AdminStaffController extends StaffController {
         }catch (NumberFormatException e){
             view.displayError("Invalid input for required tutorials or labs");
         }
+    }
+    private void removeCourse() {
     }
 }
