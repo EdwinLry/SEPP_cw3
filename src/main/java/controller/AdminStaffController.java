@@ -301,27 +301,88 @@ public class AdminStaffController extends StaffController {
     }
     private void addCourse() {
         String courseCode = view.getInput("Enter course code: ");
-        if (sharedContext.getCourseManager().checkCourseCode(courseCode)) {
-            view.displayError("Course with the same code already exists");
+        if (courseCode == null || courseCode.trim().isEmpty()) {
+            view.displayError("Course code cannot be empty.");
             return;
         }
+        if (sharedContext.getCourseManager().checkCourseCode(courseCode)) {
+            view.displayError("Course with the same code already exists.");
+            return;
+        }
+
         String courseName = view.getInput("Enter course name: ");
+        if (courseName == null || courseName.trim().isEmpty()) {
+            view.displayError("Course name cannot be empty.");
+            return;
+        }
+
         String courseDescription = view.getInput("Enter course description: ");
+        if (courseDescription == null || courseDescription.trim().isEmpty()) {
+            view.displayError("Course description cannot be empty.");
+            return;
+        }
+
         boolean requiresComputers = view.getYesNoInput("Does this course require computers?");
+
         String courseOrganiserName = view.getInput("Enter course organiser name: ");
-        //TODO: Add email validation
+        if (courseOrganiserName == null || courseOrganiserName.trim().isEmpty()) {
+            view.displayError("Course organiser name cannot be empty.");
+            return;
+        }
+
         String courseOrganiserEmail = view.getInput("Enter course organiser email: ");
+        if (courseOrganiserEmail == null || !courseOrganiserEmail.contains("@")) {
+            view.displayError("Invalid course organiser email.");
+            return;
+        }
+
+        //TODO: email validation
+
         String courseSecretaryName = view.getInput("Enter course secretary name: ");
+        if (courseSecretaryName == null || courseSecretaryName.trim().isEmpty()) {
+            view.displayError("Course secretary name cannot be empty.");
+            return;
+        }
+
         String courseSecretaryEmail = view.getInput("Enter course secretary email: ");
+        if (courseSecretaryEmail == null || !courseSecretaryEmail.contains("@")) {
+            view.displayError("Invalid course secretary email.");
+            return;
+        }
+
         try {
-            int requiredTutorials = Integer.parseInt(view.getInput("Enter required tutorials: "));
-            int requiredLabs = Integer.parseInt(view.getInput("Enter required labs: "));
-            if (sharedContext.getCourseManager().addCourse(courseCode, courseName, courseDescription, requiresComputers, courseOrganiserName, courseOrganiserEmail,
-                    courseSecretaryName, courseSecretaryEmail, requiredTutorials, requiredLabs)) {
-                view.displaySuccess("Course added successfully");
+            String tutorialsInput = view.getInput("Enter required tutorials: ");
+            String labsInput = view.getInput("Enter required labs: ");
+
+            if (tutorialsInput == null || labsInput == null ||
+                    tutorialsInput.trim().isEmpty() || labsInput.trim().isEmpty()) {
+                view.displayError("Required fields for tutorials and labs must not be empty.");
+                return;
             }
-        }catch (NumberFormatException e){
-            view.displayError("Invalid input for required tutorials or labs");
+
+            int requiredTutorials = Integer.parseInt(tutorialsInput);
+            int requiredLabs = Integer.parseInt(labsInput);
+
+            if (requiredTutorials < 0 || requiredLabs < 0) {
+                view.displayError("Need 0 or more of each.");
+                return;
+            }
+
+            boolean success = sharedContext.getCourseManager().addCourse(
+                    courseCode, courseName, courseDescription, requiresComputers,
+                    courseOrganiserName, courseOrganiserEmail,
+                    courseSecretaryName, courseSecretaryEmail,
+                    requiredTutorials, requiredLabs
+            );
+
+            if (success) {
+                view.displaySuccess("Course added successfully");
+            } else {
+                view.displayError("An unexpected error occurred while adding the course.");
+            }
+
+        } catch (NumberFormatException e) {
+            view.displayError("Invalid input for required tutorials or labs. Please enter a number.");
         }
     }
     private void removeCourse() {

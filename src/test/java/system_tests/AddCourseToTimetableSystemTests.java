@@ -35,7 +35,7 @@ public class AddCourseToTimetableSystemTests extends TUITest {
      * Tests successfully adding a course.
      */
     @Test
-    public void addCourseSuccess() throws URISyntaxException, IOException, ParseException {
+    public void testAddCourseSuccess() throws URISyntaxException, IOException, ParseException {
         loginAsStudent(context);
         setMockInput("1", "INF2B", "-1");
 
@@ -52,7 +52,7 @@ public class AddCourseToTimetableSystemTests extends TUITest {
      * Tests adding a course with an invalid course code.
      */
     @Test
-    public void addCourseInvalifCode() throws URISyntaxException, IOException, ParseException {
+    public void testAddCourseInvalifCode() throws URISyntaxException, IOException, ParseException {
         loginAsStudent(context);
         setMockInput("1", "Not-a-course", "-1");
 
@@ -69,7 +69,7 @@ public class AddCourseToTimetableSystemTests extends TUITest {
      * Tests adding a course with an empty course code.
      */
     @Test
-    public void addCourseEmptyCode() throws URISyntaxException, IOException, ParseException {
+    public void testAddCourseEmptyCode() throws URISyntaxException, IOException, ParseException {
         loginAsStudent(context);
         setMockInput("1", "", "-1");
 
