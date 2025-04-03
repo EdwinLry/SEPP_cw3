@@ -97,7 +97,6 @@ public class AdminStaffController extends StaffController {
                 currentSection.getTopic(),
                 "FAILURE"+" (Error: the question cannot be empty )"
             );
-
             view.displayError("Question cannot be empty");
             return;
         }
@@ -113,7 +112,6 @@ public class AdminStaffController extends StaffController {
                 currentSection.getTopic(),
                 "FAILURE"+" (Error: the answer cannot be empty )"
             );
-
             view.displayError("Answer cannot be empty");
             return;
         }
@@ -186,7 +184,6 @@ public class AdminStaffController extends StaffController {
                 boolean hasCourse = courseManager.hasCourse(courseTag);
 
                 // check if course code is valid
-                // todo: make it repeat
                 if (!hasCourse) {
                     Logger logger = Logger.getInstance();
                     logger.log(
@@ -198,6 +195,7 @@ public class AdminStaffController extends StaffController {
                     );
 
                     view.displayError("The tag must correspond to a course code");
+                    return;
                 }
             }
 
