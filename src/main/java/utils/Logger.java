@@ -26,6 +26,6 @@ public class Logger {
 
     public void log(long time, String userId, String actionName, String inputs, String status) {
         info("Time: {}, User ID: {}, Action: {}, Inputs: {}, Status: {}",
-                formatter.format(java.time.Instant.ofEpochMilli(time)), userId, actionName, inputs, status);
+                time, userId, actionName, inputs, status);
     }
 }

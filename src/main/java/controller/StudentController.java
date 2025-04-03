@@ -57,7 +57,6 @@ public class StudentController extends Controller {
 
         if (courseManager.hasCourse(courseCode)) {
             courseManager.addCourseToStudentTimetable(studentEmail, courseCode);
-            view.displaySuccess("The course was successfully added to your timetable.");
         } else {
             view.displayError("Incorrect course code, failed to add course.");
         }
