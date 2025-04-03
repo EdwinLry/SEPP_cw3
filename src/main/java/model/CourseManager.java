@@ -208,7 +208,36 @@ public class CourseManager {
         }
     }
 
+<<<<<<< Updated upstream
     private int CheckChosenTutorials(Map<Integer,Activity> activities, int[] chosenActivities){
+=======
+    public boolean hasCourse(String courseCode) {
+        return courses.containsKey(courseCode);
+    }
+
+    // todo choose one of these functions
+    /**
+     * @return The course list in "CourseCode - CourseName" format
+     */
+    public String ViewCourses() {//need to refactor name
+        courseList.setLength(0);
+        for (Course course : courses.values()) {
+            courseList.append(course.getCourseCode()).append(" - ").append(course.getName()).append("\n");
+        }
+        return courseList.toString();
+    }
+    public void viewCourses(){
+        for(Course course : courses.values()){
+            view.displayCourse(course);
+        }
+    }
+
+    public void viewSpecificCourse(String name){
+        view.displayCourse(courses.get(name));
+    }
+
+    private int checkChosenTutorials(Map<Integer,Activity> activities, int[] chosenActivities){
+>>>>>>> Stashed changes
         int count = 0;
         for(int tutorialId : chosenActivities){
             if(activities.get(tutorialId) instanceof Tutorial){

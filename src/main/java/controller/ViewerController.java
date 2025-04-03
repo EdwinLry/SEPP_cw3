@@ -42,7 +42,7 @@ public class ViewerController extends Controller{
     private void viewSpecificCourse(String courseCode) {
         if (sharedContext.courseManager.checkCourseCode(courseCode)) {
             view.displayInfo("Course Details:\n");
-            view.displayCourse(sharedContext.courseManager.getCourse(courseCode));
+            sharedContext.courseManager.viewSpecificCourse(courseCode);
         } else {
             view.displayError("Course not found.");
         }
