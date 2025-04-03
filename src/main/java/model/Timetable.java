@@ -89,6 +89,9 @@ public class Timetable {
     }
 
     public void removeSlotsForCourse(String courseCode) {
+        if(!hasSlotsForCourse(courseCode)) {
+            return;
+        }
         timeSlots.removeIf(slot -> slot.hasCourseCode(courseCode));
     }
 

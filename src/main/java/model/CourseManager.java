@@ -256,7 +256,7 @@ public class CourseManager {
             view.displayCourse(course);
         }
     }
-    public void viewCourse(String name){
+    public void viewSpecificCourse(String name){
         view.displayCourse(courses.get(name));
     }
     private Map<String,Course> getCourses(){return courses;}
