@@ -49,10 +49,10 @@ public class AddCourseToTimetableSystemTests extends TUITest {
     }
 
     /**
-     * Tests adding a course with a non-existent course code.
+     * Tests adding a course with an invalid course code.
      */
     @Test
-    public void addCourseWrongCode() throws URISyntaxException, IOException, ParseException {
+    public void addCourseInvalifCode() throws URISyntaxException, IOException, ParseException {
         loginAsStudent(context);
         setMockInput("1", "Not-a-course", "-1");
 
