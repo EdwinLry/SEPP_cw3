@@ -34,6 +34,10 @@ public class CourseManager {
         return courses.containsKey(courseCode);
     }
 
+    public boolean hasCourse(String courseCode) {
+        return courses.containsKey(courseCode);
+    }
+
     public boolean removeCourse(String courseCode) {
         if (courses.containsKey(courseCode)) {
             courses.remove(courseCode);
@@ -164,8 +168,6 @@ public class CourseManager {
         }
         return count;
     }
-    private Course getCourse(String courseCode) {
-        return courses.get(courseCode);
-    }
+    public Course getCourse(String courseCode) {return courses.get(courseCode);}
     private Map<String,Course> getCourses(){return courses;}
 }
