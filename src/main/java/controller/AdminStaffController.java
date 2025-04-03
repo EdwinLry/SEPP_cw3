@@ -55,7 +55,7 @@ public class AdminStaffController extends StaffController {
         }
     }
     private void addFAQItem(FAQSection currentSection) {
-        // dislay what the user is doing
+        // display what the user is doing
         view.displayInfo("=== Add New FAQ Question-Answer Pair===");
 
         // When adding an item at root of FAQ, creating a section is mandatory
@@ -280,20 +280,19 @@ public class AdminStaffController extends StaffController {
         while (true) {
             view.displayInfo("[-1] Return to main menu");
             view.displayInfo("[-2] Add course");
-            view.displayInfo("[-3] Remove course");
+            view.displayInfo("[-3] Add activity to course");
+            view.displayInfo("[-4] Remove course");
             String input = view.getInput("Please choose an option: ");
             try {
                 int optionNo = Integer.parseInt(input);
-
-                if (optionNo == -2) {
-                    addCourse();
-                } else if (optionNo == -1) {
-                    break;
-                } else if (optionNo == -3) {
-                    //TODO: Implement course removal
-                    break;
-                } else {
-                    view.displayError("Invalid option: " + optionNo);
+                switch (optionNo) {
+                    case -1 -> {
+                        return;
+                    }
+                    case -2 -> addCourse();
+                    case -3 -> addActivityToCourse();
+                    case -4 -> removeCourse();
+                    default -> view.displayError("Invalid option: " + optionNo);
                 }
             } catch (NumberFormatException e) {
                 view.displayError("Invalid option: " + input);
@@ -324,5 +323,24 @@ public class AdminStaffController extends StaffController {
         }catch (NumberFormatException e){
             view.displayError("Invalid input for required tutorials or labs");
         }
+    }
+    private void removeCourse() {
+        view.displayInfo("Available courses:");
+        String courseList = sharedContext.getCourseManager().ViewCourses();
+        if (courseList.isEmpty()) {
+            view.displayInfo("No courses available.");
+            return;
+        } else {
+            view.displayInfo(courseList);
+        }
+        String courseCode = view.getInput("Enter course code: ");
+        if (sharedContext.getCourseManager().removeCourse(courseCode)) {
+            view.displaySuccess("Course removed successfully");
+        } else {
+            view.displayError("Course not found");
+        }
+    }
+    private void addActivityToCourse() {
+        //TODO: Implement this method
     }
 }
