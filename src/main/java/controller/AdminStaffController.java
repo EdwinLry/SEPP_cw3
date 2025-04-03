@@ -65,6 +65,10 @@ public class AdminStaffController extends StaffController {
 
         if (createSection) {
             String newTopic = view.getInput("Enter new topic title: ");
+            if (newTopic == null || newTopic.isEmpty()){
+                view.displayError("Topic cannot be empty");
+                return;
+            }
             FAQSection newSection = new FAQSection(newTopic);
             if (currentSection == null) {
                 if (sharedContext.getFAQ().getSections().stream().anyMatch(section -> section.getTopic().equals(newTopic))) {
@@ -87,7 +91,7 @@ public class AdminStaffController extends StaffController {
         }
 
         // enter question for FAQ
-        String question = view.getInput("Enter the question for new FAQ item: ");
+        String question = view.getInput("Enter the question: ");
         if(question == null || question.isEmpty()){
             Logger logger = Logger.getInstance();
             logger.log(
@@ -119,7 +123,6 @@ public class AdminStaffController extends StaffController {
         // check if user wants to add a course tag
         boolean addTag = view.getYesNoInput("Would you like to add a Course tag?");
 
-
         // if user wants to add a course tag, check if there are any courses available
         if (addTag) {
             CourseManager courseManager = sharedContext.getCourseManager();
@@ -135,6 +138,12 @@ public class AdminStaffController extends StaffController {
                 String[] courseDetailsSplit = courseStr.split(" - ");
 
                 Course courseName = courseManager.getCourse(courseDetailsSplit[0]);
+
+                if (courseName == null) {
+                    view.displayError("No course found with name " + courseDetailsSplit[0]);
+                    return;
+                }
+
                 String fullActivityDetailsAsString = "";
 
                 // full list of activities for given course
