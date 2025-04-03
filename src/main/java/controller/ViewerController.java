@@ -21,8 +21,7 @@ public class ViewerController extends Controller{
 
     public void viewCourseDetails(String courseCode) {
         if (sharedContext.courseManager.hasCourse(courseCode)) {
-            String courseDetails = sharedContext.courseManager.
-            view.displayInfo("Course Details:\n" + courseDetails);
+
         } else {
             view.displayError("Course not found.");
         }

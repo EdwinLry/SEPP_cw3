@@ -123,12 +123,7 @@ public class AdminStaffController extends StaffController {
         // check if user wants to add a course tag
         boolean addTag = view.getYesNoInput("Would you like to add a Course tag?");
 
-<<<<<<< HEAD
         StringBuilder fullActivityDetailsAsString = new StringBuilder();
-
-=======
-        // if user wants to add a course tag, check if there are any courses available
->>>>>>> ea2c310018e8a87e50bbbd4b0c84fc9da9dcf47b
         if (addTag) {
             CourseManager courseManager = sharedContext.getCourseManager();
             String courseDetails = courseManager.ViewCourses();
@@ -161,13 +156,13 @@ public class AdminStaffController extends StaffController {
 
                 // iterate through all activities and add to activity detail empty string
                 for (Activity activity : activities.values()) {
-<<<<<<< HEAD
+
                     String activityDetailsAsString = activity.toString() + ", ";
                     fullActivityDetailsAsString.append(activityDetailsAsString);
-=======
+
                     String activityDetailsAsString = activity.toString() + ";";
                     fullActivityDetailsAsString += activityDetailsAsString;
->>>>>>> ea2c310018e8a87e50bbbd4b0c84fc9da9dcf47b
+
                 }
 
                 // concatenate course name and course code with activity details
