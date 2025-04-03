@@ -4,6 +4,7 @@ import model.FAQManager;
 import model.FAQ.FAQSection;
 import model.Inquiry;
 import model.Course;
+import model.Timetable;
 
 public interface View {
     String getInput(String prompt);
@@ -18,4 +19,5 @@ public interface View {
     void displayFAQSection(FAQSection section);
     void displayInquiry(Inquiry inquiry);
     void displayCourse(Course course);
+    void displayTimetable(Timetable timetable);
 }

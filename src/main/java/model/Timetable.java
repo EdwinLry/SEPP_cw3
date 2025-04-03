@@ -91,4 +91,12 @@ public class Timetable {
     public void removeSlotsForCourse(String courseCode) {
         timeSlots.removeIf(slot -> slot.hasCourseCode(courseCode));
     }
+
+    public List<TimeSlot> getTimeSlots() {
+        return timeSlots;
+    }
+
+    public String getStudentEmail() {
+        return studentEmail;
+    }
 }

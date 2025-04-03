@@ -21,7 +21,7 @@ public class CourseManager {
     /**
      * @return The course list in "CourseCode - CourseName" format
      */
-    public String ViewCourses() {
+    public String ViewCourses() {//need to refactor name
         courseList.setLength(0);
         for (Course course : courses.values()) {
             courseList.append(course.getCourseCode()).append(" - ").append(course.getName()).append("\n");
@@ -148,6 +148,45 @@ public class CourseManager {
         view.displaySuccess("The course was successfully added to your timetable");
     }
 
+    public void chooseActivityForCourse(String studentEmail, String courseCode, int activityId) {
+        Course course = getCourse(courseCode);
+        if (course == null) {
+            Logger logger = Logger.getInstance();
+            logger.log(System.currentTimeMillis(), studentEmail, "chooseActivityForCourse",
+                    studentEmail + courseCode, "FAILURE" + "(Error: Incorrect course code provided)");
+            view.displayError("Incorrect course code");
+            return;
+        }
+
+        Timetable currentTimeTable = null;
+        boolean found = false;
+        for (Timetable timetable : timetables) {
+            if (timetable.hasStudentEmail(studentEmail)) {
+                currentTimeTable = timetable;
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            Logger logger = Logger.getInstance();
+            logger.log(System.currentTimeMillis(), studentEmail, "chooseActivityForCourse",
+                    studentEmail + courseCode, "FAILURE" + "(Error: No timetable found for the student)");
+            view.displayError("No timetable found for the student");
+            return;
+        }
+        if (currentTimeTable.chooseActivity(courseCode, activityId)) {
+            Logger logger = Logger.getInstance();
+            logger.log(System.currentTimeMillis(), studentEmail, "chooseActivityForCourse",
+                    studentEmail + courseCode, "SUCCESS");
+            view.displaySuccess("The activity was successfully chosen");
+        } else {
+            Logger logger = Logger.getInstance();
+            logger.log(System.currentTimeMillis(), studentEmail, "chooseActivityForCourse",
+                    studentEmail + courseCode, "FAILURE" + "(Error: Activity not found or already chosen)");
+            view.displayError("Activity not found or already chosen");
+        }
+    }
+
     private int CheckChosenTutorials(Map<Integer,Activity> activities, int[] chosenActivities){
         int count = 0;
         for(int tutorialId : chosenActivities){
@@ -170,7 +209,36 @@ public class CourseManager {
     public Course getCourse(String courseCode) {return courses.get(courseCode);}
 
     public void viewTimetable(String email){
-
+        Timetable currentTimeTable = null;
+        boolean found = false;
+        for (Timetable timetable : timetables) {
+            if (timetable.hasStudentEmail(email)) {
+                currentTimeTable = timetable;
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            view.displayError("No timetable found for the student");
+            return;
+        }
+        view.displayTimetable(currentTimeTable);
+    }
+    public void viewCourses(){
+        for(Course course : courses.values()){
+            view.displayCourse(course);
+        }
+    }
+    public void viewCourse(String name){
+        view.displayCourse(courses.get(name));
     }
     private Map<String,Course> getCourses(){return courses;}
+    public List<Timetable> getTimetable(String email){
+        for(Timetable timetable : timetables){
+            if(timetable.hasStudentEmail(email)){
+                return timetables;
+            }
+        }
+        return null;
+    }
 }

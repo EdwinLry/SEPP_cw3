@@ -3,6 +3,7 @@ package view;
 import model.*;
 import model.FAQ.FAQItem;
 import model.FAQ.FAQSection;
+import model.timetable.TimeSlot;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -119,5 +120,19 @@ public class TextUserInterface implements View {
         System.out.println("Course Secretary Email: " + course.getCourseSecretaryEmail());
         System.out.println("Required Tutorials: " + course.getRequiredTutorials());
         System.out.println("Required Labs: " + course.getRequiredLabs());
+    }
+    public void displayTimetable(Timetable timetable) {
+        System.out.println("Timetable for " + timetable.getStudentEmail());
+        System.out.println("Time Slots:");
+        for (TimeSlot timeSlot : timetable.getTimeSlots()) {
+            System.out.println("Course Code: " + timeSlot.courseCode);
+            System.out.println("Day: " + timeSlot.getDay());
+            System.out.println("Start Date: " + timeSlot.getStartDate());
+            System.out.println("Start Time: " + timeSlot.getStartTime());
+            System.out.println("End Date: " + timeSlot.getEndDate());
+            System.out.println("End Time: " + timeSlot.getEndTime());
+            System.out.println("Activity ID: " + timeSlot.activityId);
+            System.out.println("-------------------------");
+        }
     }
 }
