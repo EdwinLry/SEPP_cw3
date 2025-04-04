@@ -101,13 +101,13 @@ public class InquirerController extends Controller {
 
         String subject = view.getInput("Describe the topic of your inquiry in a few words: ");
         if (subject.strip().isBlank()) {
-            view.displayError("Inquiry subject cannot be blank! Please try again");
+            view.displayError("Inquiry subject cannot be blank!");
             return;
         }
 
         String text = view.getInput("Write your inquiry:" + System.lineSeparator());
         if (text.strip().isBlank()) {
-            view.displayError("Inquiry content cannot be blank! Please try again");
+            view.displayError("Inquiry content cannot be blank!");
             return;
         }
 
