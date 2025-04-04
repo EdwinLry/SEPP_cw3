@@ -222,8 +222,8 @@ public class CourseManager {
         if (!found) {
             Logger logger = Logger.getInstance();
             logger.log(System.currentTimeMillis(), studentEmail, "chooseActivityForCourse",
-                    studentEmail + courseCode, "FAILURE" + "(Error: No timetable found for the student)");
-            view.displayError("No timetable found for the student");
+                    studentEmail + courseCode, "FAILURE" + "(Error: No timetable found.)");
+            view.displayError("No timetable found.");
             return;
         }
 
@@ -296,7 +296,7 @@ public class CourseManager {
             }
         }
         if (!found) {
-            view.displayError("No timetable found for the student");
+            view.displayError("No timetable found.");
             return;
         }
         view.displayTimetable(currentTimeTable);

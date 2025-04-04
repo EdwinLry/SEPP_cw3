@@ -18,26 +18,19 @@ public class AddCourseToTimetableSystemTests extends TUITest {
     //TODO: try to add to timetable when there are no courses
 
     private SharedContext context;
-
-    @BeforeEach
-    public void setUp() throws URISyntaxException, IOException, ParseException {
-        SharedContext context = new SharedContext();
-
-        // Admin logs in and adds the course
-        loginAsAdminStaff(context);
-        setMockInput("-2", "INF2B", "SEPP", "Software Engineering and Professional Practice", "n", "Mrs A", "mrsa@ed.ac.uk",
-                "Mr B", "mrb@ed.ac.uk", "1", "3", "-1", "0");
-
-        AdminStaffController adminStaff = new AdminStaffController(context,
-                new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
-        adminStaff.manageCourses();
-    }
-
     /**
      * Tests successfully adding a course.
      */
     @Test
     public void testAddCourseSuccess() throws URISyntaxException, IOException, ParseException {
+        // Add course to system
+        context = new SharedContext();
+        loginAsAdminStaff(context);
+        setMockInput("-2", "INF2B", "SEPP", "Software Engineering and Professional Practice", "n", "Mrs A", "mrsa@ed.ac.uk",
+                "Mr B", "mrb@ed.ac.uk", "1", "3", "-1", "0");
+        AdminStaffController adminStaff = new AdminStaffController(context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
+        adminStaff.manageCourses();
+
         loginAsStudent(context);
         setMockInput("1", "INF2B", "-1");
 
@@ -55,15 +48,19 @@ public class AddCourseToTimetableSystemTests extends TUITest {
      */
     @Test
     public void testAddCourseInvalidCode() throws URISyntaxException, IOException, ParseException {
+        // Add course to system
+        context = new SharedContext();
+        loginAsAdminStaff(context);
+        setMockInput("-2", "INF2B", "SEPP", "Software Engineering and Professional Practice", "n", "Mrs A", "mrsa@ed.ac.uk",
+                "Mr B", "mrb@ed.ac.uk", "1", "3", "-1", "0");
+        AdminStaffController adminStaff = new AdminStaffController(context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
+        adminStaff.manageCourses();
+
         loginAsStudent(context);
         setMockInput("1", "Not-a-course", "-1");
-
-        StudentController studentController = new StudentController(context,
-                new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
-
+        StudentController studentController = new StudentController(context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
         startOutputCapture();
         studentController.manageTimetable();
-
         assertOutputContains("Incorrect course code, failed to add course.");
     }
 
@@ -72,16 +69,34 @@ public class AddCourseToTimetableSystemTests extends TUITest {
      */
     @Test
     public void testAddCourseEmptyCode() throws URISyntaxException, IOException, ParseException {
+        // Add course to system
+        context = new SharedContext();
+        loginAsAdminStaff(context);
+        setMockInput("-2", "INF2B", "SEPP", "Software Engineering and Professional Practice", "n", "Mrs A", "mrsa@ed.ac.uk",
+                "Mr B", "mrb@ed.ac.uk", "1", "3", "-1", "0");
+        AdminStaffController adminStaff = new AdminStaffController(context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
+        adminStaff.manageCourses();
+
         loginAsStudent(context);
         setMockInput("1", "", "-1");
-
-        StudentController studentController = new StudentController(context,
-                new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
-
+        StudentController studentController = new StudentController(context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
         startOutputCapture();
         studentController.manageTimetable();
-
         assertOutputContains("Must input a course code.");
+    }
+
+    /**
+     * Tests adding a course with none in system.
+     */
+    @Test
+    public void testNoCourses() throws URISyntaxException, IOException, ParseException {
+        context = new SharedContext();
+        loginAsStudent(context);
+        setMockInput("1","-1");
+        StudentController studentController = new StudentController(context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
+        startOutputCapture();
+        studentController.manageTimetable();
+        assertOutputContains("No courses currently in system.");
     }
 
 
