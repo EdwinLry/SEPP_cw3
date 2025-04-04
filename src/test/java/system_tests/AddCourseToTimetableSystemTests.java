@@ -21,7 +21,7 @@ public class AddCourseToTimetableSystemTests extends TUITest {
 
     @BeforeEach
     public void setUp() throws URISyntaxException, IOException, ParseException {
-        context = new SharedContext();
+        SharedContext context = new SharedContext();
 
         // Admin logs in and adds the course
         loginAsAdminStaff(context);
@@ -83,4 +83,6 @@ public class AddCourseToTimetableSystemTests extends TUITest {
 
         assertOutputContains("Must input a course code.");
     }
+
+
 }

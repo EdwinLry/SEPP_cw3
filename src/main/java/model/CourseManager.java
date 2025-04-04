@@ -174,6 +174,7 @@ public class CourseManager {
                     studentEmail+courseCode,
                     "FAILURE"+"(Warning: number of required tutorials"+
                             course.getRequiredTutorials() + "not yet chosen)");
+
             view.displayError("You have to choose " + course.getRequiredTutorials() + " tutorials for this course");
         }
 
@@ -182,7 +183,7 @@ public class CourseManager {
             Logger logger = Logger.getInstance();
             logger.log(System.currentTimeMillis(),studentEmail,"addCoursetoStudentTimetable",
                     studentEmail+courseCode,
-                    "FAILURE"+"(Warning: number of required labs"+
+                    "FAILURE" + "(Warning: number of required labs"+
                             course.getRequiredLabs() + "not yet chosen)");
             view.displayError("You have to choose " + course.getRequiredLabs() + " labs for this course");
         }

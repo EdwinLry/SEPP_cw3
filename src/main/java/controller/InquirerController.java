@@ -15,6 +15,11 @@ public class InquirerController extends Controller {
         FAQSection currentSection = null;
         String userEmail;
 
+        boolean onlyTags = view.getYesNoInput("Do you want to filter for just a course tag?");
+        if(onlyTags){
+            String courseCode = view.getInput("Please enter course code to filter:");
+        }
+
         if (sharedContext.currentUser instanceof AuthenticatedUser) {
             userEmail = ((AuthenticatedUser) sharedContext.currentUser).getEmail();
         } else {

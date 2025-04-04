@@ -24,8 +24,9 @@ public class Logger {
         return instance;
     }
 
-    public void log(long time, String userId, String actionName, String inputs, String status) {
+    public void log (long time, String userId, String actionName, String inputs, String status) {
         info("Time: {}, User ID: {}, Action: {}, Inputs: {}, Status: {}",
                 time, userId, actionName, inputs, status);
+        System.out.println(time);
     }
 }

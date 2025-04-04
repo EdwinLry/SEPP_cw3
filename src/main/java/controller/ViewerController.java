@@ -33,7 +33,7 @@ public class ViewerController extends Controller{
         String courseList = sharedContext.courseManager.viewCoursesFormatted();
 
         if (courseList.isEmpty()) {
-            view.displayInfo("No courses available.");
+            view.displayError("No courses available.");
         } else {
             view.displayInfo("Available Courses:\n");
             view.displayInfo(courseList);

@@ -2,6 +2,7 @@ package system_tests;
 
 import controller.AdminStaffController;
 import controller.InquirerController;
+import controller.TeachingStaffController;
 import external.MockAuthenticationService;
 import external.MockEmailService;
 import view.TextUserInterface;
@@ -153,6 +154,21 @@ public class ConsultFAQSystemTests extends TUITest {
 
         assertOutputContains("Invalid input: not-a-number");
     }
+
+    @Test
+    public void consultWithOnlyTags () throws URISyntaxException, IOException, ParseException {
+        // admin staff add a course with course organiser:
+
+        //     "username": "teacher1",
+        //    "password": "teacher1pass",
+        //    "email": "teacher1@hindeburg.ac.uk",
+        //    "role": "TeachingStaff"
+
+        // student then makes an inquiry to the course
+        // admin staff then logs in and looks at inquries
+        // teacher then logs in and responds to inquriry
+    }
+
 
 
 

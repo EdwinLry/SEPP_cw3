@@ -26,7 +26,17 @@ public class StaffController extends Controller {
 
     protected void respondToInquiry(Inquiry inquiry) {
         String subject = view.getInput("Enter subject: ");
-        String response = view.getInput("Enter response:\n");
+        if (subject == null || subject.strip().isEmpty()) {
+            view.displayError("Subject cannot be blank. Email not sent.");
+            return;
+        }
+
+        String response = view.getInput("Enter response: ");
+        if (response == null || response.strip().isEmpty()) {
+            view.displayError("Response cannot be blank. Email not sent.");
+            return;
+        }
+
         String currentEmail = ((AuthenticatedUser) sharedContext.currentUser).getEmail();
         email.sendEmail(currentEmail, inquiry.getInquirerEmail(), subject, response);
         sharedContext.inquiries.remove(inquiry);
