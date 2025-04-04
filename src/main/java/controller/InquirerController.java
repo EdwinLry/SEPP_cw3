@@ -14,14 +14,14 @@ public class InquirerController extends Controller {
     public void consultFAQ() {
         FAQSection currentSection = null;
         String userEmail;
+
         if (sharedContext.currentUser instanceof AuthenticatedUser) {
             userEmail = ((AuthenticatedUser) sharedContext.currentUser).getEmail();
         } else {
             userEmail = null;
         }
 
-        int optionNo = 0;
-        while (currentSection != null || optionNo != -1) {
+        while (true) {
             if (currentSection == null) {
                 view.displayFAQ(sharedContext.getFAQ());
                 view.displayInfo("[-1] Return to main menu");
@@ -33,21 +33,34 @@ public class InquirerController extends Controller {
             String input = view.getInput("Please choose an option: ");
 
             try {
-                optionNo = Integer.parseInt(input);
+                int optionNo = Integer.parseInt(input);
 
-                if (optionNo != -1 && optionNo != -2 && optionNo != -3) {
-                    try {
-                        if (currentSection == null) {
+                if (optionNo == -1) {
+                    if (currentSection == null) {
+                        break;  // Exit to main menu
+                    } else if (currentSection.getParent() == null) {
+                        currentSection = null;  // Go back to FAQ root
+                    } else {
+                        currentSection = currentSection.getParent();  // Go up one level
+                    }
+                } else {
+                    if (currentSection == null) {
+                        if (optionNo >= 0 && optionNo < sharedContext.getFAQ().getSections().size()) {
                             currentSection = sharedContext.getFAQ().getSections().get(optionNo);
                         } else {
-                            currentSection = currentSection.getSubsections().get(optionNo);
+                            view.displayError("Invalid option: " + optionNo);
                         }
-                    } catch (IndexOutOfBoundsException e) {
-                        view.displayError("Invalid option: " + optionNo);
+                    } else {
+                        if (optionNo >= 0 && optionNo < currentSection.getSubsections().size()) {
+                            currentSection = currentSection.getSubsections().get(optionNo);
+                        } else {
+                            view.displayError("Invalid option: " + optionNo);
+                        }
                     }
                 }
+
             } catch (NumberFormatException e) {
-                view.displayError("Invalid option: " + input);
+                view.displayError("Invalid input: " + input);
             }
         }
     }

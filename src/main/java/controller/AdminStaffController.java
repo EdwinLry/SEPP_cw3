@@ -14,7 +14,7 @@ public class AdminStaffController extends StaffController {
     public AdminStaffController(SharedContext sharedContext, View view, AuthenticationService auth, EmailService email) {
         super(sharedContext, view, auth, email);
     }
-    public void manageFAQ() {
+    public void manageFAQ2() {
         FAQSection currentSection = null;
 
         while (true) {
@@ -51,6 +51,67 @@ public class AdminStaffController extends StaffController {
                 }
             } catch (NumberFormatException e) {
                 view.displayError("Invalid option: " + input);
+            }
+        }
+    }
+
+    public void manageFAQ() {
+        FAQSection currentSection = null;
+
+        while (true) {
+            if (currentSection == null) {
+                // Display top-level FAQ
+                view.displayFAQ(sharedContext.getFAQ());
+                view.displayInfo("[-1] Return to main menu");
+            } else {
+                // Display a specific topic or subsection
+                view.displayFAQSection(currentSection);
+                if (currentSection.getSubsections().isEmpty()) {
+                    view.displayInfo("[-1] Return to FAQ");
+                } else {
+                    view.displayInfo("[-1] Go up");
+                }
+            }
+
+            view.displayInfo("[-2] Add FAQ item");
+            String input = view.getInput("Please choose an option: ");
+
+            try {
+                int optionNo = Integer.parseInt(input);
+
+                if (optionNo == -2) {
+                    addFAQItem(currentSection);
+
+                } else if (optionNo == -1) {
+                    if (currentSection == null) {
+                        // Exit to main menu
+                        break;
+                    } else if (currentSection.getParent() == null) {
+                        // Top-level section → go back to full FAQ
+                        currentSection = null;
+                    } else {
+                        // Go up one level
+                        currentSection = currentSection.getParent();
+                    }
+
+                } else {
+                    if (currentSection == null) {
+                        if (optionNo >= 0 && optionNo < sharedContext.getFAQ().getSections().size()) {
+                            currentSection = sharedContext.getFAQ().getSections().get(optionNo);
+                        } else {
+                            view.displayError("Invalid option: " + optionNo);
+                        }
+                    } else {
+                        if (optionNo >= 0 && optionNo < currentSection.getSubsections().size()) {
+                            currentSection = currentSection.getSubsections().get(optionNo);
+                        } else {
+                            view.displayError("Invalid option: " + optionNo);
+                        }
+                    }
+                }
+
+            } catch (NumberFormatException e) {
+                view.displayError("Invalid input: " + input);
             }
         }
     }
