@@ -13,33 +13,7 @@ import java.net.URISyntaxException;
 
 public class ConsultMemberOfStaff extends TUITest {
 
-    // Invalid email address! Please try again
-
-    // Inquiry subject cannot be blank! Please try again
-
-    // Inquiry content cannot be blank! Please try again
-
-    //Email from inquiries@hindeburg.ac.nz to inquiries@hindeburg.ac.nz
-    //New inquiry from leila.d@df.com
-    //Subject: gh
-    //Please log into the Self Service Portal to review and respond to the inquiry.
-    //Your inquiry has been recorded. Someone will be in touch via email soon!
-
-    //login as admin staff
-    // Inquirer: leila.d@df.com
-    //Created at: 2025-04-04T14:34:34.534093
-    //Assigned to: No one
-    //Query:
-    //snfjknsgjdjrbgjk
-
-    // Inquiry has been reassigned when valid email
-
-    // need to check for valid email
-
-    //Email from admin1@hindeburg.ac.uk to leila.d@df.com
-    //response
-    //drkjnvjabjkrbajkv
-    //Email response sent!
+    // TODO: a test where they write an email to someone on a course and then admin logs in and looks at that inquiry and then the actual user logs in and replies to email.
     @Test
     public void testValidInquiryNoTag() throws URISyntaxException, IOException, ParseException {
         SharedContext context = new SharedContext();
@@ -125,6 +99,7 @@ public class ConsultMemberOfStaff extends TUITest {
         controller.contactStaff();
         assertOutputContains("No courses currently in the system.");
     }
+
     @Test
     public void testInvalidEmail() throws URISyntaxException, IOException, ParseException {
         SharedContext context = new SharedContext();
