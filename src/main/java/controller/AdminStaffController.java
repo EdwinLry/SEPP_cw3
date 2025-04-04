@@ -3,12 +3,9 @@ package controller;
 import external.AuthenticationService;
 import external.EmailService;
 import model.*;
-import model.FAQ.FAQItem;
 import model.FAQ.FAQSection;
 import view.View;
 import utils.Logger;
-import model.activities.Activity;
-import java.util.*;
 
 public class AdminStaffController extends StaffController {
     public AdminStaffController(SharedContext sharedContext, View view, AuthenticationService auth, EmailService email) {
@@ -148,7 +145,7 @@ public class AdminStaffController extends StaffController {
             }
 
             String courseTag = view.getInput("Enter course code to add as tag:");
-            if (!courseManager.hasCourse(courseTag)) {
+            if (!courseManager.checkCourseCode(courseTag)) {
                 Logger.getInstance().log(System.currentTimeMillis(),
                         ((AuthenticatedUser) sharedContext.currentUser).getEmail(),
                         "addFAQItem", FAQSectionTopic,
@@ -279,7 +276,6 @@ public class AdminStaffController extends StaffController {
             return;
         }
 
-        //TODO: email validation
 
         String courseSecretaryName = view.getInput("Enter course secretary name: ");
         if (courseSecretaryName == null || courseSecretaryName.trim().isEmpty()) {
@@ -320,6 +316,12 @@ public class AdminStaffController extends StaffController {
 
             if (success) {
                 view.displaySuccess("Course added successfully");
+                email.sendEmail(
+                        SharedContext.ADMIN_STAFF_EMAIL,
+                        courseOrganiserEmail,
+                        "New course added: " + courseName,
+                        "Course code: " + courseCode + "\nCourse name: " + courseName
+                );
             } else {
                 view.displayError("An unexpected error occurred while adding the course.");
             }
@@ -341,8 +343,17 @@ public class AdminStaffController extends StaffController {
             view.displayInfo(courseList);
         }
         String courseCode = view.getInput("Enter course code: ");
-        if (sharedContext.getCourseManager().removeCourse(courseCode)) {
+        String[] mailingList = sharedContext.getCourseManager().removeCourse(courseCode);
+        if (mailingList != null) {
             view.displaySuccess("Course removed successfully");
+            for(String mail : mailingList) {
+                email.sendEmail(
+                        SharedContext.ADMIN_STAFF_EMAIL,
+                        mail,
+                        "Course removed: " + courseCode,
+                        "The course with code " + courseCode + " has been removed from the system."
+                );
+            }
             logger.log(
                     System.currentTimeMillis(),
                     ((AuthenticatedUser) sharedContext.currentUser).getEmail(),
@@ -363,5 +374,15 @@ public class AdminStaffController extends StaffController {
     }
     private void addActivityToCourse() {
         //TODO: Implement this method
+        String courseCode = view.getInput("Enter course code: ");
+        if (sharedContext.courseManager.checkCourseCode(courseCode)) {
+            view.displayError("Invalid course code.");
+            return;
+        }
+        String activityName = view.getInput("Enter activity name: ");
+        if (activityName == null || activityName.trim().isEmpty()) {
+            view.displayError("Activity name cannot be empty.");
+            return;
+        }
     }
 }

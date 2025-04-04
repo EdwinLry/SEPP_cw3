@@ -89,7 +89,7 @@ public class InquirerController extends Controller {
                 return;
             }
             String courseCode = view.getInput("Please enter course code:");
-            if(sharedContext.courseManager.hasCourse(courseCode)){
+            if(sharedContext.courseManager.checkCourseCode(courseCode)){
                 Course course = sharedContext.courseManager.getCourse(courseCode);
                 staffEmail = course.getCourseOrganiserEmail();
             }

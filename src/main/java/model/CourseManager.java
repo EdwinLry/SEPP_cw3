@@ -7,7 +7,9 @@ import java.util.Map;
 
 import model.activities.Activity;
 import model.activities.Lab;
+import model.activities.Lecture;
 import model.activities.Tutorial;
+import model.timetable.TimeSlot;
 import utils.Logger;
 import view.*;
 
@@ -54,21 +56,24 @@ public class CourseManager {
     public boolean checkCourseCode(String courseCode) {
         return courses.containsKey(courseCode);
     }
-
-    public boolean hasCourse(String courseCode) {
-        return courses.containsKey(courseCode);
-    }
     /**
-     * Remove a course from the course list
+     * Remove a course from the course list, removes all related activities from all timetables
      * @param courseCode The course code to remove
-     * @return true if the course was removed, false otherwise
+     * @return mailing list if the course was removed, nullS otherwise
      */
-    public boolean removeCourse(String courseCode) {
+    public String[] removeCourse(String courseCode) {
         if (courses.containsKey(courseCode)) {
+            List<String> mailingList = new ArrayList<>();
+            mailingList.add(courses.get(courseCode).getCourseOrganiserEmail());
+
             courses.remove(courseCode);
-            return true;
+            for (Timetable timetable : timetables) {
+                timetable.removeSlotsForCourse(courseCode);
+                mailingList.add(timetable.getStudentEmail());
+            }
+            return mailingList.toArray(new String[0]);
         }
-        return false;
+        return null;
     }
     /**
      * Add a course to the course list
@@ -97,6 +102,7 @@ public class CourseManager {
             return;
         }
 
+        // Check if student's timetable already exists
         Timetable currentTimeTable = null;
         boolean found = false;
         for(Timetable timetable : timetables) {
@@ -111,9 +117,18 @@ public class CourseManager {
             timetables.add(currentTimeTable);
         }
 
+        // Check if the student already has the course in their timetable
+        if(currentTimeTable.hasSlotsForCourse(courseCode)) {
+            Logger logger = Logger.getInstance();
+            logger.log(System.currentTimeMillis(),studentEmail,"addCoursetoStudentTimetable",
+                    studentEmail+courseCode,"FAILURE"+"(Error: Course already in timetable)");
+            view.displayError("Course already in timetable");
+            return;
+        }
+        // Look for conflicts with existing activities
         for(Activity activity : course.getActivities().values()) {
             String[][] conflicts = currentTimeTable.checkConflicts(activity.getStartDate(), activity.getStartTime(),
-                    activity.getEndDate(), activity.getEndTime());
+                    activity.getEndDate(), activity.getEndTime(), activity.getDay());
             if(conflicts != null) {
                 boolean isUnrecordedLecture1 = course.isUnrecordedLecture(activity.getId());
                 boolean isUnrecordedLecture2 = false;
@@ -127,7 +142,7 @@ public class CourseManager {
                             break;
                     }
                 }
-                if(isUnrecordedLecture1 && isUnrecordedLecture2) {
+                if(isUnrecordedLecture1 || isUnrecordedLecture2) {
                     logger.log(System.currentTimeMillis(),studentEmail,"addCoursetoStudentTimetable",
                             studentEmail+courseCode,
                             "FAILURE"+"(Error: at least one clash with an unrecorded lecture)");
@@ -145,6 +160,8 @@ public class CourseManager {
             }
             currentTimeTable.addTimeSlot(courseCode, activity.getDay(), activity.getStartDate(), activity.getStartTime(),
                     activity.getEndDate(), activity.getEndTime(), activity.getId());
+            // Automatically choose the activity if it is a lecture
+            if(activity instanceof Lecture) currentTimeTable.chooseActivity(courseCode, activity.getId());
         }
 
         int[] chosenActivities = currentTimeTable.chosenActivities(course.getCourseCode());
@@ -191,6 +208,7 @@ public class CourseManager {
             return;
         }
 
+        // Check if student's timetable exists
         Timetable currentTimeTable = null;
         boolean found = false;
         for (Timetable timetable : timetables) {
@@ -207,6 +225,16 @@ public class CourseManager {
             view.displayError("No timetable found for the student");
             return;
         }
+
+        // Check if the student has the course in their timetable
+        if (!hasCourse(courseCode, currentTimeTable)) {
+            Logger logger = Logger.getInstance();
+            logger.log(System.currentTimeMillis(), studentEmail, "chooseActivityForCourse",
+                    studentEmail + courseCode, "FAILURE" + "(Error: Course not found in the timetable)");
+            view.displayError("Course not found in the timetable");
+            return;
+        }
+
         if (currentTimeTable.chooseActivity(courseCode, activityId)) {
             Logger logger = Logger.getInstance();
             logger.log(System.currentTimeMillis(), studentEmail, "chooseActivityForCourse",
@@ -220,6 +248,20 @@ public class CourseManager {
         }
     }
 
+    /**
+     * Checks if a student has a specific course in their timetable
+     * @param courseCode The course code
+     * @param timetable The student's timetable
+     * @return true if the student has the course, false otherwise
+     */
+    private boolean hasCourse(String courseCode, Timetable timetable) {
+        for (TimeSlot slot : timetable.getTimeSlots()) {
+            if (slot.hasCourseCode(courseCode)) {
+                return true;
+            }
+        }
+        return false;
+    }
     private int CheckChosenTutorials(Map<Integer,Activity> activities, int[] chosenActivities){
         int count = 0;
         for(int tutorialId : chosenActivities){
@@ -229,7 +271,6 @@ public class CourseManager {
         }
         return count;
     }
-
     private int CheckChosenLabs(Map<Integer,Activity> activities, int[] chosenActivities){
         int count = 0;
         for(int labId : chosenActivities){
@@ -258,11 +299,6 @@ public class CourseManager {
             return;
         }
         view.displayTimetable(currentTimeTable);
-    }
-    public void viewCourses(){
-        for(Course course : courses.values()){
-            view.displayCourse(course);
-        }
     }
     public void viewSpecificCourse(String name){
         view.displayCourse(courses.get(name));

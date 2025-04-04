@@ -3,7 +3,6 @@ package controller;
 import external.AuthenticationService;
 import external.EmailService;
 import model.*;
-import model.FAQ.FAQSection;
 import view.View;
 
 public class StudentController extends Controller {
@@ -55,7 +54,7 @@ public class StudentController extends Controller {
             return;
         }
 
-        if (courseManager.hasCourse(courseCode)) {
+        if (courseManager.checkCourseCode(courseCode)) {
             courseManager.addCourseToStudentTimetable(studentEmail, courseCode);
         } else {
             view.displayError("Incorrect course code, failed to add course.");
@@ -73,7 +72,7 @@ public class StudentController extends Controller {
             return;
         }
 
-        if (courseManager.hasCourse(courseCode)) {
+        if (courseManager.checkCourseCode(courseCode)) {
             Timetable timetable = courseManager.getTimetable(studentEmail);
             timetable.removeSlotsForCourse(courseCode);
             view.displaySuccess("The course was successfully removed from your timetable.");
@@ -102,7 +101,7 @@ public class StudentController extends Controller {
             view.displayError("Must input a course code.");
             return;
         }
-        if (!courseManager.hasCourse(courseCode)) {
+        if (!courseManager.checkCourseCode(courseCode)) {
             view.displayError("Incorrect course code.");
             return;
         }

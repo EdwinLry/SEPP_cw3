@@ -21,7 +21,7 @@ public class Timetable {
     public void addTimeSlot(String courseCode, DayOfWeek day, LocalDate startDate, LocalTime startTime,
                             LocalDate endDate, LocalTime endTime, int activityId) {
         TimeSlot timeSlot = new TimeSlot(day, startDate, startTime, endDate, endTime,
-                courseCode, activityId, TimeSlotStatus.CHOSEN);
+                courseCode, activityId, TimeSlotStatus.UNCHOSEN);
         timeSlots.add(timeSlot);
     }
 
@@ -35,6 +35,12 @@ public class Timetable {
         return count;
     }
 
+    /**
+     * Get the chosen activities for a given course code.
+     * Prepare for further verification of number of chosen labs and tutorials.
+     * @param courseCode the course code to check
+     * @return an array of activity IDs that are chosen for the given course code
+     */
     public int[] chosenActivities(String courseCode) {
         List<Integer> activities = new ArrayList<>();
         for (TimeSlot slot : timeSlots) {
@@ -45,21 +51,41 @@ public class Timetable {
         return activities.stream().mapToInt(i -> i).toArray();
     }
 
+    /**
+     * Check for conflicts with the given time slot.
+     * Returns a 2D array of for further processing to check whether the conflicts are unrecorded lectures.
+     * @param startDate start date of the time slot
+     * @param startTime start time of the time slot
+     * @param endDate end date of the time slot
+     * @param endTime end time of the time slot
+     * @param day day of the week
+     * @return 2D array of strings, where each string is a course code and activity ID of the conflicting time slots.
+     */
     public String[][] checkConflicts(LocalDate startDate, LocalTime startTime,
-                                   LocalDate endDate, LocalTime endTime) {
+                                     LocalDate endDate, LocalTime endTime, DayOfWeek day) {
+        LocalDateTime start = LocalDateTime.of(startDate, startTime);
+        LocalDateTime end = LocalDateTime.of(endDate, endTime);
+
         List<String[]> conflicts = new ArrayList<>();
+
         for (TimeSlot slot : timeSlots) {
-            if (slot.getStartDate().isBefore(endDate) || slot.getEndDate().isAfter(startDate)) {
-                if (slot.getStartTime().isBefore(endTime) || slot.getEndTime().isAfter(startTime)) {
-                    String[] conflict = {slot.courseCode, slot.activityId + ""};
-                    conflicts.add(conflict);
+            // Check if the slot is on the same day and has been chosen
+            if (slot.getDay() == day && slot.isChosen()) {
+                LocalDateTime slotStart = LocalDateTime.of(slot.getStartDate(), slot.getStartTime());
+                LocalDateTime slotEnd = LocalDateTime.of(slot.getEndDate(), slot.getEndTime());
+
+                // Check if the new time slot overlaps with the existing slot.
+                if ((start.isBefore(slotEnd) && end.isAfter(slotStart))
+                        || start.isEqual(slotStart) || end.isEqual(slotEnd)) {
+                    conflicts.add(new String[]{slot.courseCode, String.valueOf(slot.activityId)});
                 }
             }
         }
-        if(conflicts.isEmpty()){
+        // Return null if no conflicts were found.
+        if (conflicts.isEmpty()) {
             return null;
         }
-        return conflicts.toArray(new String[0][0]);
+        return conflicts.toArray(new String[0][]);
     }
 
     public boolean hasStudentEmail(String email) {
