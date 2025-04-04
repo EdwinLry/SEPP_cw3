@@ -88,22 +88,41 @@ public class TextUserInterface implements View {
     public void displayFAQSection(FAQSection section) {
         System.out.println(section.getTopic());
         displayDivider();
-        for (FAQItem item : section.getItems()) {
-            System.out.print("[");
-            System.out.print(item.getId());
-            System.out.print("] ");
-            System.out.println(item.getQuestion());
-            System.out.print("> ");
-            System.out.println(item.getAnswer());
+
+        // Display super-topics
+        if (section.getParent() != null) {
+            System.out.println("Direct Super-Topics:");
+            System.out.println(section.getParent().getTopic());
+            System.out.println();
         }
 
-        System.out.println("Subsections:");
-        int i = 0;
-        for (FAQSection subsection : section.getSubsections()) {
-            System.out.print("[");
-            System.out.print(i++);
-            System.out.print("] ");
-            System.out.println(subsection.getTopic());
+        // Display FAQ items
+        if (section.getItems().isEmpty()) {
+            System.out.println("No FAQ items in this section.");
+        } else {
+            for (FAQItem item : section.getItems()) {
+                System.out.print("[");
+                System.out.print(item.getId());
+                System.out.print("] ");
+                System.out.println(item.getQuestion());
+                System.out.print("> ");
+                System.out.println(item.getAnswer());
+            }
+        }
+        System.out.println();
+
+        // Display subsections
+
+        if (!section.getSubsections().isEmpty()) {
+            System.out.println("Direct Subsections:");
+            int i = 0;
+            for (FAQSection subsection : section.getSubsections()) {
+                System.out.print("[");
+                System.out.print(i++);
+                System.out.print("] ");
+                System.out.println(subsection.getTopic());
+            }
+            System.out.println();
         }
     }
 
