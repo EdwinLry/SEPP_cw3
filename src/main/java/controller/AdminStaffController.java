@@ -181,6 +181,9 @@ public class AdminStaffController extends StaffController {
 
         while (true) {
             view.displayInfo("Pending inquiries");
+            if(inquiryTitles == null){
+                view.displayInfo("No active enquiries");
+            }
             int selection = selectFromMenu(inquiryTitles, "Back to main menu");
             if (selection == -1) {
                 return;

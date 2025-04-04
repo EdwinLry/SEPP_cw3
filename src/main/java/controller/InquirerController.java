@@ -67,6 +67,8 @@ public class InquirerController extends Controller {
 
     public void contactStaff() {
         String inquirerEmail;
+        String staffEmail = SharedContext.ADMIN_STAFF_EMAIL;
+
         if (sharedContext.currentUser instanceof AuthenticatedUser) {
             AuthenticatedUser user = (AuthenticatedUser) sharedContext.currentUser;
             inquirerEmail = user.getEmail();
@@ -74,7 +76,25 @@ public class InquirerController extends Controller {
             inquirerEmail = view.getInput("Enter your email address: ");
             // From https://owasp.org/www-community/OWASP_Validation_Regex_Repository
             if (!inquirerEmail.matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$")) {
-                view.displayError("Invalid email address! Please try again");
+                view.displayError("Invalid email address!");
+                return;
+            }
+        }
+
+        boolean withTag = view.getYesNoInput("Would you like to provide a course code for this inquiry?");
+
+        if (withTag) {
+            if(sharedContext.courseManager.viewCoursesFormatted() == ""){
+                view.displayError("No courses currently in the system.");
+                return;
+            }
+            String courseCode = view.getInput("Please enter course code:");
+            if(sharedContext.courseManager.hasCourse(courseCode)){
+                Course course = sharedContext.courseManager.getCourse(courseCode);
+                staffEmail = course.getCourseOrganiserEmail();
+            }
+            else{
+                view.displayError("Invalid course code. No course found with code '" + courseCode + "'.");
                 return;
             }
         }
@@ -95,11 +115,13 @@ public class InquirerController extends Controller {
         sharedContext.inquiries.add(inquiry);
 
         email.sendEmail(
-                SharedContext.ADMIN_STAFF_EMAIL,
-                SharedContext.ADMIN_STAFF_EMAIL,
+                inquirerEmail,
+                staffEmail,
                 "New inquiry from " + inquirerEmail,
-                "Subject: " + subject + System.lineSeparator() + "Please log into the Self Service Portal to review and respond to the inquiry."
+                "Subject line: " + subject + System.lineSeparator() + "Please log into the Self Service Portal to review and respond to the inquiry."
         );
+
+
         view.displaySuccess("Your inquiry has been recorded. Someone will be in touch via email soon!");
     }
 }
