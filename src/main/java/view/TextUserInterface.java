@@ -70,12 +70,17 @@ public class TextUserInterface implements View {
     public void displayFAQ(FAQManager faqManager) {
         System.out.println("Frequently Asked Questions");
         displayDivider();
-        int i = 0;
-        for (FAQSection section : faqManager.getSections()) {
-            System.out.print("[");
-            System.out.print(i++);
-            System.out.print("] ");
-            System.out.println(section.getTopic());
+        if(faqManager.getSections().isEmpty()){
+            System.out.print("FAQ is Empty.\n");
+        }
+        else{
+            int i = 0;
+            for (FAQSection section : faqManager.getSections()) {
+                System.out.print("[");
+                System.out.print(i++);
+                System.out.print("] ");
+                System.out.println(section.getTopic());
+            }
         }
     }
 

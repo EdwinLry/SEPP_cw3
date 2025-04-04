@@ -120,7 +120,7 @@ public class AdminStaffController extends StaffController {
                 ((AuthenticatedUser) sharedContext.currentUser).getEmail(),
                 "addFAQItem",
                 FAQSectionTopic,
-                "FAILURE"+" (Error: the answer cannot be empty )"
+                "FAILURE" + " (Error: the answer cannot be empty )"
             );
             view.displayError("Answer cannot be empty");
             return;
@@ -231,7 +231,7 @@ public class AdminStaffController extends StaffController {
                 ((AuthenticatedUser) sharedContext.currentUser).getEmail(),
                 "addFAQItem",
                 FAQSectionTopic,
-                "SUCCESS"+" (A new FAQ item was added)"
+                "SUCCESS" + " (A new FAQ item was added)"
         );
 
         view.displaySuccess("The new FAQ item was added ");
