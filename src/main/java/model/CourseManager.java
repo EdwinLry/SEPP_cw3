@@ -38,6 +38,14 @@ public class CourseManager {
         }
         return courseList.toString();
     }
+    public String viewCoursesFormatted() {//need to refactor name
+        courseList.setLength(0);
+        for (Course course : courses.values()) {
+            courseList.append("Course name: ");
+            courseList.append(course.getName()).append(" - Course code: ").append(course.getCourseCode()).append("\n");
+        }
+        return courseList.toString();
+    }
     /**
      * Check if a course code is valid
      * @param courseCode The course code to check

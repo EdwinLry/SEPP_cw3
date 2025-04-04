@@ -13,7 +13,6 @@ import java.net.URISyntaxException;
 
 public class AddFAQQASystemTests extends TUITest {
 
-
     /**
      * Tests adding a new FAQ item without a course tag.
      */

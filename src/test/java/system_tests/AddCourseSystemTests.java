@@ -94,4 +94,21 @@ public class AddCourseSystemTests extends TUITest{
 
         assertOutputContains("Need 0 or more of each.");
     }
+
+    //TODO: invalid email
+    public void testInvalidEmail() throws Exception {
+        SharedContext context = new SharedContext();
+        loginAsAdminStaff(context);
+
+        setMockInput("-2", "INF1B", "Informatics 2", "Desc", "n",
+                "Dr C", "not-an-email", "-1");
+
+        AdminStaffController controller = new AdminStaffController(context,
+                new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
+
+        startOutputCapture();
+        controller.manageCourses();
+
+        assertOutputContains("Invalid course organiser email.");
+    }
 }
