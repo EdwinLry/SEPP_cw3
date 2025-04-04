@@ -14,15 +14,9 @@ import java.net.URISyntaxException;
 
 public class ConsultFAQSystemTests extends TUITest {
 
-    // test when there are no questions in FAQ
-    // add questions
-    // test when there is hierarchy to navigate
-    // add course tag
-    // test when there is a course tag
-    // errors: "No course found with name"
-    // "Invalid option: " + optionNo
-    // "Invalid input: " + input
-
+    /**
+     * Tests when there are no questions in the FAQ.
+     */
     @Test
     public void testNoQuestions() throws URISyntaxException, IOException, ParseException {
         SharedContext context = new SharedContext();
