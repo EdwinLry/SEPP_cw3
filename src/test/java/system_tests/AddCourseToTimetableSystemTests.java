@@ -15,6 +15,8 @@ import java.net.URISyntaxException;
 
 public class AddCourseToTimetableSystemTests extends TUITest {
 
+    //TODO: try to add to timetable when there are no courses
+
     private SharedContext context;
 
     @BeforeEach
@@ -52,7 +54,7 @@ public class AddCourseToTimetableSystemTests extends TUITest {
      * Tests adding a course with an invalid course code.
      */
     @Test
-    public void testAddCourseInvalifCode() throws URISyntaxException, IOException, ParseException {
+    public void testAddCourseInvalidCode() throws URISyntaxException, IOException, ParseException {
         loginAsStudent(context);
         setMockInput("1", "Not-a-course", "-1");
 

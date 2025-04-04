@@ -38,7 +38,7 @@ public class CourseManager {
         }
         return courseList.toString();
     }
-    public String viewCoursesFormatted() {//need to refactor name
+    public String viewCoursesFormatted() {
         courseList.setLength(0);
         for (Course course : courses.values()) {
             courseList.append("Course name: ");
