@@ -198,7 +198,7 @@ public class ConsultMemberOfStaffSystemTests extends TUITest {
     }
 
     @Test
-    public void consultWithOnlyTags () throws URISyntaxException, IOException, ParseException {
+    public void testConsultWithOnlyTags () throws URISyntaxException, IOException, ParseException {
         // admin staff add a course with course organiser:
 
         //     "username": "teacher1",
