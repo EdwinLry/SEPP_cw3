@@ -21,9 +21,12 @@ public class AddCourseToTimetableSystemTests extends TUITest {
      */
     @Test
     public void testAddCourseSuccess() throws URISyntaxException, IOException, ParseException {
-        // Add course to system
+        // context would be initialized in the TUITest class
+        // context would be in default state in the TUITest class in each @Test
 
         loginAsStudent(context);
+
+        //use initialized context
         setMockInput("1", "CS101", "-1");
 
         StudentController studentController = new StudentController(context,
