@@ -38,7 +38,7 @@ public class FAQSection {
         }
     }
 
-    public boolean removeItem(int itemId) {
+    public boolean removeItem2(int itemId) {
         if (itemId < 0 || itemId >= items.size()) {
             return false;
         }
@@ -49,6 +49,28 @@ public class FAQSection {
                 return true;
             }
         }
+        return false;
+    }
+
+    public boolean removeItem(int itemId) {
+        FAQItem toRemove = null;
+
+        for (FAQItem item : items) {
+            if (item.getId() == itemId) {
+                toRemove = item;
+                break;
+            }
+        }
+
+        if (toRemove != null) {
+            items.remove(toRemove);
+            // Reassign IDs to maintain consistency
+            for (int i = 0; i < items.size(); i++) {
+                items.get(i).setId(i);
+            }
+            return true;
+        }
+
         return false;
     }
 

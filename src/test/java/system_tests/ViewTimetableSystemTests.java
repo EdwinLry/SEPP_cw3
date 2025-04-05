@@ -1,21 +1,17 @@
 package system_tests;
 
-import controller.AdminStaffController;
-import controller.InquirerController;
-import controller.ViewerController;
 import controller.StudentController;
 import external.MockAuthenticationService;
 import external.MockEmailService;
 import model.SharedContext;
 import org.json.simple.parser.ParseException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import view.TextUserInterface;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-public class ViewTimetable extends TUITest {
+public class ViewTimetableSystemTests extends TUITest {
 
     private SharedContext context;
 

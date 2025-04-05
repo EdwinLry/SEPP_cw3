@@ -15,6 +15,8 @@ import java.net.URISyntaxException;
 
 public class ConsultFAQSystemTests extends TUITest {
 
+    //No FAQ items in this section.
+
     /**
      * Tests when there are no questions in the FAQ.
      */

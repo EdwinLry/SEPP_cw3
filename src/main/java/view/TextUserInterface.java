@@ -71,7 +71,7 @@ public class TextUserInterface implements View {
         System.out.println("Frequently Asked Questions");
         displayDivider();
         if(faqManager.getSections().isEmpty()){
-            System.out.print("FAQ is Empty.\n");
+            displayError("FAQ is Empty.");
         }
         else{
             int i = 0;
@@ -98,7 +98,7 @@ public class TextUserInterface implements View {
 
         // Display FAQ items
         if (section.getItems().isEmpty()) {
-            System.out.println("No FAQ items in this section.");
+            displayError("No FAQ items in this section.");
         } else {
             for (FAQItem item : section.getItems()) {
                 System.out.print("[");

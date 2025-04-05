@@ -31,15 +31,21 @@ public class AdminStaffController extends StaffController {
             }
 
             view.displayInfo("[-2] Add FAQ item");
+            view.displayInfo("[-3] Remove FAQ item");
+
             String input = view.getInput("Please choose an option: ");
 
             try {
                 int optionNo = Integer.parseInt(input);
 
+                // add FAQ item
                 if (optionNo == -2) {
                     addFAQItem(currentSection);
-
-                } else if (optionNo == -1) {
+                }
+                else if(optionNo == -3){
+                    removeFAQItem(currentSection);
+                }
+                else if (optionNo == -1) {
                     if (currentSection == null) {
                         // Exit to main menu
                         break;
@@ -90,7 +96,7 @@ public class AdminStaffController extends StaffController {
             FAQSection newSection = new FAQSection(newTopic);
             if (currentSection == null) {
                 if (sharedContext.getFAQ().getSections().stream().anyMatch(section -> section.getTopic().equals(newTopic))) {
-                    view.displayWarning("Topic '" + newTopic + "' already exists!");
+                    view.displayWarning("Topic '" + newTopic + "' already exists! (Putting question under same topic)");
                     newSection = sharedContext.getFAQ().getSections().stream()
                             .filter(section -> section.getTopic().equals(newTopic))
                             .findFirst().orElseThrow();
@@ -169,6 +175,47 @@ public class AdminStaffController extends StaffController {
         }
         else{
             view.displaySuccess("New FAQ item was added without tag.");
+        }
+    }
+
+    private void removeFAQItem(FAQSection currentSection) {
+        //need to implement this is the code for add faq
+
+        if(sharedContext.faqManager.getSections().isEmpty()){
+            view.displayError("FAQ is empty, no FAQ item to remove.");
+            return;
+        }
+
+        try {
+            String input = view.getInput("Which number question would you like to remove?");
+            int itemId = Integer.parseInt(input);
+
+            boolean removed = currentSection.removeItem(itemId);
+
+            if (!removed) {
+                view.displayError("No FAQ item with ID " + itemId + " found in this section.");
+                return;
+            }
+
+            view.displaySuccess("FAQ item removed successfully.");
+
+            // If that was the last item in this section:
+            if (currentSection.getItems().isEmpty()) {
+                FAQSection parent = currentSection.getParent();
+
+                if (parent != null) {
+                    parent.getSubsections().remove(currentSection);
+                    parent.getSubsections().addAll(currentSection.getSubsections());
+                    view.displayInfo("Section was empty after removal and has been deleted. Its subsections were moved up.");
+                } else {
+                    sharedContext.getFAQ().getSections().remove(currentSection);
+                    sharedContext.getFAQ().getSections().addAll(currentSection.getSubsections());
+                    view.displayInfo("Top-level section was empty and removed. Subsections moved up.");
+                }
+            }
+
+        } catch (NumberFormatException e) {
+            view.displayError("Invalid input. Please enter a valid number.");
         }
     }
 

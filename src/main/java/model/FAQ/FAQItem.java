@@ -1,7 +1,7 @@
 package model.FAQ;
 
 public class FAQItem {
-    private final int id;
+    private int id;
     private final String question;
     private final String answer;
     private final String courseTag;
@@ -33,5 +33,9 @@ public class FAQItem {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

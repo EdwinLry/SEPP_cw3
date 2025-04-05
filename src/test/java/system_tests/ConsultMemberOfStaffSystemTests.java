@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-public class ConsultMemberOfStaff extends TUITest {
+public class ConsultMemberOfStaffSystemTests extends TUITest {
 
     // TODO: a test where they write an email to someone on a course and then admin logs in and looks at that inquiry and then the actual user logs in and replies to email.
     @Test
