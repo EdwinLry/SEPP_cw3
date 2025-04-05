@@ -63,30 +63,24 @@ public class Timetable {
      */
     public String[][] checkConflicts(LocalDate startDate, LocalTime startTime,
                                      LocalDate endDate, LocalTime endTime, DayOfWeek day) {
-        LocalDateTime start = LocalDateTime.of(startDate, startTime);
-        LocalDateTime end = LocalDateTime.of(endDate, endTime);
-
         List<String[]> conflicts = new ArrayList<>();
 
         for (TimeSlot slot : timeSlots) {
-            // Check if the slot is on the same day and has been chosen
             if (slot.getDay() == day && slot.isChosen()) {
-                LocalDateTime slotStart = LocalDateTime.of(slot.getStartDate(), slot.getStartTime());
-                LocalDateTime slotEnd = LocalDateTime.of(slot.getEndDate(), slot.getEndTime());
-
-                // Check if the new time slot overlaps with the existing slot.
-                if ((start.isBefore(slotEnd) && end.isAfter(slotStart))
-                        || start.isEqual(slotStart) || end.isEqual(slotEnd)) {
+                // Check if the date ranges overlap.
+                if (endDate.isBefore(slot.getStartDate()) || startDate.isAfter(slot.getEndDate())) {
+                    continue;
+                }
+                // Check if the daily time intervals overlap.
+                if (startTime.isBefore(slot.getEndTime()) && slot.getStartTime().isBefore(endTime)) {
                     conflicts.add(new String[]{slot.courseCode, String.valueOf(slot.activityId)});
                 }
             }
         }
-        // Return null if no conflicts were found.
-        if (conflicts.isEmpty()) {
-            return null;
-        }
-        return conflicts.toArray(new String[0][]);
+
+        return conflicts.isEmpty() ? null : conflicts.toArray(new String[0][]);
     }
+
 
     public boolean hasStudentEmail(String email) {
         return email.equals(studentEmail);
