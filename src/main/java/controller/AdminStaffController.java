@@ -442,11 +442,6 @@ public class AdminStaffController extends StaffController {
     private void addActivityToCourse(Course course) {
         // Immediately parse each input into the required type
         try{
-            int activityId = Integer.parseInt(view.getInput("Enter activity ID: "));
-            if(course.hasActivity(activityId)){
-                view.displayError("Activity with this ID already exists.");
-                return;
-            }
             String activityType = view.getInput("Enter activity type (e.g. Lecture, Tutorial, Lab): ");
             LocalDate startDate = LocalDate.parse(view.getInput("Enter start date (YYYY-MM-DD): "));
             LocalTime startTime = LocalTime.parse(view.getInput("Enter start time (HH:MM): "));
