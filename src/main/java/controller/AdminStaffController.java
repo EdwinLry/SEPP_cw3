@@ -7,6 +7,10 @@ import model.FAQ.FAQSection;
 import view.View;
 import utils.Logger;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class AdminStaffController extends StaffController {
     public AdminStaffController(SharedContext sharedContext, View view, AuthenticationService auth, EmailService email) {
         super(sharedContext, view, auth, email);
@@ -436,7 +440,31 @@ public class AdminStaffController extends StaffController {
      * @param course the course to which the activity will be added
      */
     private void addActivityToCourse(Course course) {
-        //TODO: implement this method
-
+        try{
+            int activityId = Integer.parseInt(view.getInput("Enter activity ID: "));
+            String activityType = view.getInput("Enter activity type (e.g. Lecture, Tutorial, Lab): ");
+            String startDate = view.getInput("Enter start date (YYYY-MM-DD): ");
+            String startTime = view.getInput("Enter start time (HH:MM): ");
+            String endDate = view.getInput("Enter end date (YYYY-MM-DD): ");
+            String endTime = view.getInput("Enter end time (HH:MM): ");
+            String location = view.getInput("Enter location: ");
+            String day = view.getInput("Enter day of the week (e.g. MONDAY, TUESDAY, etc.): ");
+            if(activityType.equals("Lecture")) {
+                boolean isRecorded = view.getYesNoInput("Is the lecture recorded?");
+                course.addActivity(LocalDate.parse(startDate), LocalTime.parse(startTime),
+                        LocalDate.parse(endDate), LocalTime.parse(endTime),
+                        location, DayOfWeek.valueOf(day), activityType, isRecorded);
+            }else if(activityType.equals("Tutorial") || activityType.equals("Lab")) {
+                int groupSize = Integer.parseInt(view.getInput("Enter group size: "));
+                course.addActivity(LocalDate.parse(startDate), LocalTime.parse(startTime),
+                        LocalDate.parse(endDate), LocalTime.parse(endTime),
+                        location, DayOfWeek.valueOf(day), activityType, groupSize);
+            }else{
+                view.displayError("Invalid activity type. Please enter Lecture, Tutorial, or Lab.");
+                return;
+            }
+        }catch (Exception e) {
+            view.displayError("One of the inputs was invalid. Please try again.");
+        }
     }
 }
