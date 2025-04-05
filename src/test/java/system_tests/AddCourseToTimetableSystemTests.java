@@ -16,23 +16,15 @@ import java.net.URISyntaxException;
 public class AddCourseToTimetableSystemTests extends TUITest {
 
     //TODO: try to add to timetable when there are no courses
-
-    private SharedContext context;
     /**
      * Tests successfully adding a course.
      */
     @Test
     public void testAddCourseSuccess() throws URISyntaxException, IOException, ParseException {
         // Add course to system
-        context = new SharedContext();
-        loginAsAdminStaff(context);
-        setMockInput("-2", "INF2B", "SEPP", "Software Engineering and Professional Practice", "n", "Mrs A", "mrsa@ed.ac.uk",
-                "Mr B", "mrb@ed.ac.uk", "1", "3", "-1", "0");
-        AdminStaffController adminStaff = new AdminStaffController(context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
-        adminStaff.manageCourses();
 
         loginAsStudent(context);
-        setMockInput("1", "INF2B", "-1");
+        setMockInput("1", "CS101", "-1");
 
         StudentController studentController = new StudentController(context,
                 new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
