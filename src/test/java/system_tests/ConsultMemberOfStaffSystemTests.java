@@ -197,4 +197,18 @@ public class ConsultMemberOfStaffSystemTests extends TUITest {
         assertOutputContains("Email response sent!");
     }
 
+    @Test
+    public void consultWithOnlyTags () throws URISyntaxException, IOException, ParseException {
+        // admin staff add a course with course organiser:
+
+        //     "username": "teacher1",
+        //    "password": "teacher1pass",
+        //    "email": "teacher1@hindeburg.ac.uk",
+        //    "role": "TeachingStaff"
+
+        // student then makes an inquiry to the course
+        // admin staff then logs in and looks at inquries
+        // teacher then logs in and responds to inquriry
+    }
+
 }

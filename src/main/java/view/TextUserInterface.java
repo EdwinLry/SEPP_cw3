@@ -24,7 +24,7 @@ public class TextUserInterface implements View {
 
     @Override
     public boolean getYesNoInput(String prompt) {
-        System.out.println(prompt + " [Y/n]");
+        System.out.println(prompt + " [Y/N]");
         String line = scanner.nextLine();
         if (line.equalsIgnoreCase("y") || line.equalsIgnoreCase("yes")) {
             return true;
@@ -112,7 +112,6 @@ public class TextUserInterface implements View {
         System.out.println();
 
         // Display subsections
-
         if (!section.getSubsections().isEmpty()) {
             System.out.println("Direct Subsections:");
             int i = 0;

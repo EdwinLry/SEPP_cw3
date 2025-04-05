@@ -15,8 +15,6 @@ import java.net.URISyntaxException;
 
 public class ConsultFAQSystemTests extends TUITest {
 
-    //No FAQ items in this section.
-
     /**
      * Tests when there are no questions in the FAQ.
      */
@@ -157,19 +155,7 @@ public class ConsultFAQSystemTests extends TUITest {
         assertOutputContains("Invalid input: not-a-number");
     }
 
-    @Test
-    public void consultWithOnlyTags () throws URISyntaxException, IOException, ParseException {
-        // admin staff add a course with course organiser:
 
-        //     "username": "teacher1",
-        //    "password": "teacher1pass",
-        //    "email": "teacher1@hindeburg.ac.uk",
-        //    "role": "TeachingStaff"
-
-        // student then makes an inquiry to the course
-        // admin staff then logs in and looks at inquries
-        // teacher then logs in and responds to inquriry
-    }
 
 
 
