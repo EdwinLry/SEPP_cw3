@@ -230,8 +230,7 @@ public class AdminStaffController extends StaffController {
                         return;
                     }
                     case -2 -> addCourse();
-                    case -3 -> addActivityToCourse();
-                    case -4 -> removeCourse();
+                    case -3 -> removeCourse();
                     default -> view.displayError("Invalid option: " + optionNo);
                 }
             } catch (NumberFormatException e) {
@@ -307,6 +306,8 @@ public class AdminStaffController extends StaffController {
                 return;
             }
 
+
+
             boolean success = sharedContext.getCourseManager().addCourse(
                     courseCode, courseName, courseDescription, requiresComputers,
                     courseOrganiserName, courseOrganiserEmail,
@@ -315,6 +316,13 @@ public class AdminStaffController extends StaffController {
             );
 
             if (success) {
+                // Add activities to the course
+                int i= Integer.parseInt(view.getInput("Enter the number of activities: "));
+                for(int j=0; j<i; j++){
+                    view.displayInfo("Adding activity " + (j+1) + " to course " + courseCode);
+                    addActivityToCourse(sharedContext.getCourseManager().getCourse(courseCode));
+                    view.displayDivider();
+                }
                 view.displaySuccess("Course added successfully");
                 email.sendEmail(
                         SharedContext.ADMIN_STAFF_EMAIL,
@@ -372,17 +380,12 @@ public class AdminStaffController extends StaffController {
             );
         }
     }
-    private void addActivityToCourse() {
-        //TODO: Implement this method
-        String courseCode = view.getInput("Enter course code: ");
-        if (sharedContext.courseManager.checkCourseCode(courseCode)) {
-            view.displayError("Invalid course code.");
-            return;
-        }
-        String activityName = view.getInput("Enter activity name: ");
-        if (activityName == null || activityName.trim().isEmpty()) {
-            view.displayError("Activity name cannot be empty.");
-            return;
-        }
+
+    /** Helper method to add activity to course
+     * @param course the course to which the activity will be added
+     */
+    private void addActivityToCourse(Course course) {
+        //TODO: implement this method
+
     }
 }
