@@ -15,6 +15,7 @@ import java.net.URISyntaxException;
 
 public class ConsultFAQSystemTests extends TUITest {
 
+    // TODO: consult faq with a course tag
     /**
      * Tests when there are no questions in the FAQ.
      */
@@ -22,7 +23,7 @@ public class ConsultFAQSystemTests extends TUITest {
     public void testNoQuestions() throws URISyntaxException, IOException, ParseException {
         SharedContext context = new SharedContext();
 
-        setMockInput("-1");
+        setMockInput("-1", "-1");
 
         InquirerController controller = new InquirerController(
                 context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
@@ -39,7 +40,7 @@ public class ConsultFAQSystemTests extends TUITest {
         SharedContext context = new SharedContext();
         loginAsAdminStaff(context);
 
-        setMockInput("2", "-2", "Topic 1", "Question 1?", "Answer 1", "n", "-1", "0");
+        setMockInput("-2", "Topic 1", "Question 1?", "Answer 1", "n", "-1", "0");
 
         AdminStaffController adminStaff = new AdminStaffController(
                 context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
@@ -47,7 +48,7 @@ public class ConsultFAQSystemTests extends TUITest {
 
         adminStaff.manageFAQ();
 
-        setMockInput("0", "-1", "-1");
+        setMockInput("0","0", "-1", "-1");
 
         InquirerController controller = new InquirerController(
                 context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
@@ -72,7 +73,7 @@ public class ConsultFAQSystemTests extends TUITest {
         loginAsAdminStaff(context);
 
         // First: Add Topic 1 with one QA
-        setMockInput("2", "-2", "Topic 1", "Question 1?", "Answer 1", "n",
+        setMockInput("-2", "Topic 1", "Question 1?", "Answer 1", "n",
                 // Now: Add Topic 2 as a subsection under Topic 1
                 "0", "-2", "y", "Topic 2", "Question 2?", "Answer 2", "n",
                 "-1", "-1", "-1", "0" // Exit to main menu
@@ -85,7 +86,7 @@ public class ConsultFAQSystemTests extends TUITest {
         adminStaff.manageFAQ();
 
         // Navigate to Topic 1 → Topic 2
-        setMockInput("0", "0", "-1", "-1", "-1", "-1");
+        setMockInput("0", "0", "0","-1", "-1", "-1", "-1");
 
         InquirerController controller = new InquirerController(
                 context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
@@ -109,14 +110,17 @@ public class ConsultFAQSystemTests extends TUITest {
         SharedContext context = new SharedContext();
         loginAsAdminStaff(context);
 
-        setMockInput("2", "-2", "Topic", "Question", "Answer", "n", "-1");
+        setMockInput(
+                "-2", "Topic", "Question", "Answer", "n", // add
+                "-1", "0", "5", "-1", "-1"                // browse into FAQ and trigger invalid
+        );
 
         AdminStaffController admin = new AdminStaffController(
                 context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
         );
         admin.manageFAQ();
 
-        setMockInput("5", "-1");
+        setMockInput("n", "0", "5", "-1", "-1");
 
         InquirerController controller = new InquirerController(
                 context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
@@ -136,14 +140,16 @@ public class ConsultFAQSystemTests extends TUITest {
         SharedContext context = new SharedContext();
         loginAsAdminStaff(context);
 
-        setMockInput("2", "-2", "Topic", "Question", "Answer", "n", "-1");
+        // Add topic with one question
+        setMockInput("-2", "Topic", "Question", "Answer", "n", "-1", "0");
 
         AdminStaffController admin = new AdminStaffController(
                 context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
         );
         admin.manageFAQ();
 
-        setMockInput("not-a-number", "-1");
+        // Now consult the FAQ and enter an invalid string as option
+        setMockInput("n", "0", "not-a-number", "-1", "-1");
 
         InquirerController controller = new InquirerController(
                 context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
@@ -154,10 +160,4 @@ public class ConsultFAQSystemTests extends TUITest {
 
         assertOutputContains("Invalid input: not-a-number");
     }
-
-
-
-
-
-
 }
