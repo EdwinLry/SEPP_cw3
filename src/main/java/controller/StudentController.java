@@ -45,6 +45,12 @@ public class StudentController extends Controller {
 
     private void addCourseToTimetable(){
         CourseManager courseManager = sharedContext.getCourseManager();
+
+        if(sharedContext.getCourseManager().viewCoursesFormatted() == ""){
+            view.displayError("No courses currently in system.");
+            return;
+        }
+
         String courseCode = view.getInput("Enter course code to add:");
         AuthenticatedUser user = (AuthenticatedUser) sharedContext.currentUser;
         String studentEmail = user.getEmail();
