@@ -180,6 +180,10 @@ public class AdminStaffController extends StaffController {
 
     private void removeFAQItem(FAQSection currentSection) {
         //need to implement this is the code for add faq
+        if (currentSection == null) {
+            view.displayError("Please navigate into a topic to remove its FAQ items.");
+            return;
+        }
 
         if(sharedContext.faqManager.getSections().isEmpty()){
             view.displayError("FAQ is empty, no FAQ item to remove.");
