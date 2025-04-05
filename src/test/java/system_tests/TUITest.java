@@ -29,7 +29,7 @@ public class TUITest {
     private PrintStream backupOut;
     private InputStream backupIn;
 
-    protected SharedContext sharedContext;
+    protected SharedContext context;
 
     @BeforeEach
     public void backupSystemStreams() {
@@ -39,7 +39,7 @@ public class TUITest {
 
     @BeforeEach
     public void setUp() {
-        sharedContext = new SharedContext();
+        context = new SharedContext();
         // Set up the context with necessary data
         initCourse();
         initFAQ();
@@ -47,7 +47,7 @@ public class TUITest {
 
     private void initFAQ() {
         // Initialize FAQ with some data
-        FAQManager faqManager = sharedContext.faqManager;
+        FAQManager faqManager = context.faqManager;
         FAQSection sectionWithTag = new FAQSection("TopicWithTag");
         sectionWithTag.addItem("What is CS101?", "CS101 is an introductory course.", "CS101");
         sectionWithTag.addItem("How many credits is CS101?", "CS101 is a 3-credit course.", "CS101");
@@ -60,7 +60,7 @@ public class TUITest {
         faqManager.addSection(sectionWithoutTag);
     }
     private void initCourse() {
-        CourseManager courseManager = sharedContext.getCourseManager();
+        CourseManager courseManager = context.getCourseManager();
         courseManager.addCourse(
                 "CS101",
                 "Introduction to Computer Science",
