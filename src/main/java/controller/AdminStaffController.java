@@ -184,13 +184,13 @@ public class AdminStaffController extends StaffController {
 
     private void removeFAQItem(FAQSection currentSection) {
         //need to implement this is the code for add faq
-        if (currentSection == null) {
-            view.displayError("Please navigate into a topic to remove its FAQ items.");
-            return;
-        }
 
         if(sharedContext.faqManager.getSections().isEmpty()){
             view.displayError("FAQ is empty, no FAQ item to remove.");
+            return;
+        }
+        if (currentSection == null) {
+            view.displayError("Please navigate into a topic to remove its FAQ items.");
             return;
         }
 
@@ -440,6 +440,106 @@ public class AdminStaffController extends StaffController {
      * @param course the course to which the activity will be added
      */
     private void addActivityToCourse(Course course) {
+        int activityId;
+        while (true) {
+            try {
+                activityId = Integer.parseInt(view.getInput("Enter activity ID: "));
+                break;
+            } catch (NumberFormatException e) {
+                view.displayError("Invalid activity ID. Please enter a number.");
+            }
+        }
+
+        String activityType;
+        while (true) {
+            activityType = view.getInput("Enter activity type (Lecture, Tutorial, Lab): ");
+            if (activityType.equals("Lecture") || activityType.equals("Tutorial") || activityType.equals("Lab")) {
+                break;
+            }
+            view.displayError("Invalid activity type. Please enter Lecture, Tutorial, or Lab.");
+        }
+
+        LocalDate startDate;
+        while (true) {
+            try {
+                startDate = LocalDate.parse(view.getInput("Enter start date (YYYY-MM-DD): "));
+                break;
+            } catch (Exception e) {
+                view.displayError("Invalid date format. Please use YYYY-MM-DD.");
+            }
+        }
+
+        LocalTime startTime;
+        while (true) {
+            try {
+                startTime = LocalTime.parse(view.getInput("Enter start time (HH:MM): "));
+                break;
+            } catch (Exception e) {
+                view.displayError("Invalid time format. Please use HH:MM.");
+            }
+        }
+
+        LocalDate endDate;
+        while (true) {
+            try {
+                endDate = LocalDate.parse(view.getInput("Enter end date (YYYY-MM-DD): "));
+                break;
+            } catch (Exception e) {
+                view.displayError("Invalid date format. Please use YYYY-MM-DD.");
+            }
+        }
+
+        LocalTime endTime;
+        while (true) {
+            try {
+                endTime = LocalTime.parse(view.getInput("Enter end time (HH:MM): "));
+                break;
+            } catch (Exception e) {
+                view.displayError("Invalid time format. Please use HH:MM.");
+            }
+        }
+
+        String location;
+        while (true) {
+            location = view.getInput("Enter location: ");
+            if (location != null && !location.trim().isEmpty()) {
+                break;
+            }
+            view.displayError("Location cannot be empty.");
+        }
+
+        DayOfWeek day;
+        while (true) {
+            try {
+                String inputDay = view.getInput("Enter day of the week (e.g. MONDAY, TUESDAY): ");
+                day = DayOfWeek.valueOf(inputDay.toUpperCase());
+                break;
+            } catch (IllegalArgumentException e) {
+                view.displayError("Invalid day of the week.");
+            }
+        }
+
+        if (activityType.equals("Lecture")) {
+            boolean isRecorded = view.getYesNoInput("Is the lecture recorded?");
+            course.addActivity(startDate, startTime, endDate, endTime, location, day, activityType, isRecorded);
+        } else {
+            int groupSize;
+            while (true) {
+                try {
+                    groupSize = Integer.parseInt(view.getInput("Enter group size: "));
+                    if (groupSize > 0) break;
+                    else view.displayError("Group size must be positive.");
+                } catch (NumberFormatException e) {
+                    view.displayError("Invalid group size. Please enter a number.");
+                }
+            }
+            course.addActivity(startDate, startTime, endDate, endTime, location, day, activityType, groupSize);
+        }
+
+        view.displaySuccess("Activity added successfully.");
+    }
+
+    private void addActivityToCourse2(Course course) {
         // Immediately parse each input into the required type
         try{
             String activityType = view.getInput("Enter activity type (e.g. Lecture, Tutorial, Lab): ");
