@@ -151,4 +151,7 @@ public class AddCourseSystemTests extends TUITest{
         controller.manageCourses();
         assertOutputContains("Invalid course organiser email.");
     }
+
+
+
 }

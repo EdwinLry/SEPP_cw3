@@ -129,6 +129,7 @@ public class CourseManager {
         for(Activity activity : course.getActivities().values()) {
             String[][] conflicts = currentTimeTable.checkConflicts(activity.getStartDate(), activity.getStartTime(),
                     activity.getEndDate(), activity.getEndTime(), activity.getDay());
+
             if(conflicts != null) {
                 boolean isUnrecordedLecture1 = course.isUnrecordedLecture(activity.getId());
                 boolean isUnrecordedLecture2 = false;
@@ -158,10 +159,13 @@ public class CourseManager {
 
                 }
             }
+
             currentTimeTable.addTimeSlot(courseCode, activity.getDay(), activity.getStartDate(), activity.getStartTime(),
                     activity.getEndDate(), activity.getEndTime(), activity.getId());
-            // Automatically choose the activity if it is a lecture
-            if(activity instanceof Lecture) currentTimeTable.chooseActivity(courseCode, activity.getId());
+
+            if(activity instanceof Lecture) {
+                currentTimeTable.chooseActivity(courseCode, activity.getId());
+            }
         }
 
         int[] chosenActivities = currentTimeTable.chosenActivities(course.getCourseCode());
