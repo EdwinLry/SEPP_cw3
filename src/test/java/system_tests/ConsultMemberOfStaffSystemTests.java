@@ -114,97 +114,73 @@ public class ConsultMemberOfStaffSystemTests extends TUITest {
 
 
     @Test
-    //TODO: finish this section
-    public void testInquiryFlow() throws URISyntaxException, IOException, ParseException {
+    public void testRespond() throws URISyntaxException, IOException, ParseException {
         SharedContext context = new SharedContext();
-
-        loginAsAdminStaff(context);
-        setMockInput("-2", "123", "123", "123", "n",
-                "teacher3", "teacher3@hindeburg.ac.uk",
-                "teacher2", "teacher2@hindeburg.ac.uk",
-                "2", "3", "0", "-1", "0");
-        AdminStaffController adminController = new AdminStaffController(
-                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
-        );
-        adminController.manageCourses();
-
-        // --- Student submits inquiry to that course ---
-        loginAsStudent(context);
-        setMockInput("y", "123", "Question", "Inquiry");
+        setMockInput("inquirer@hindeburg.ac.uk", "n", "Question", "Inquiry");
         InquirerController inquirer = new InquirerController(
                 context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
         );
         inquirer.contactStaff();
 
-        // --- Admin reassigns the inquiry to teacher1 ---
+        // Admin logs in and responds
         loginAsAdminStaff(context);
-        setMockInput(
-                "0",                      // Select the first pending inquiry
-                "0",                      // Choose to redirect it
-                "teacher1@hindeburg.ac.uk", // Email of teaching staff
-                "-1",                     // Back to inquiries list
-                "-1",                     // Back to main menu
-                "0"                       // Logout
-        );
-        startOutputCapture();  // Start capturing just before we do output-generating things
-        adminController.manageInquiries();
-
-        // --- Teaching staff logs in and responds to inquiry ---
-        loginAsTeachingStaff(context);  // assumes teacher1/teacher1pass are valid
-        setMockInput(
-                "0",              // Select first assigned inquiry
-                "0",              // Choose to respond
-                "Subject",        // Response subject
-                "Answer",         // Response body
-                "-1" , "-1"             // Back to assigned inquiries
-        );
-        TeachingStaffController staffController = new TeachingStaffController(
+        setMockInput("0", "1", "Subject", "Response", "-1");
+        AdminStaffController adminController = new AdminStaffController(
                 context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
         );
-        staffController.manageReceivedInquiries();
-
-        // --- Verify both success messages appear ---
-        assertOutputContains("Inquiry has been reassigned");
+        startOutputCapture();
+        adminController.manageInquiries();
         assertOutputContains("Email response sent!");
     }
 
     @Test
-    public void testReassignInquiry() throws URISyntaxException, IOException, ParseException {
-        SharedContext context = new SharedContext();
-        // --- Student submits inquiry to that course ---
-        setMockInput("n", "Question", "Inquiry");
+    public void testRespondTeacher() throws URISyntaxException, IOException, ParseException {
+        setMockInput("inquirer@hindeburg.ac.uk", "y", "CS101","Question", "Inquiry");
         InquirerController inquirer = new InquirerController(
                 context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
         );
         inquirer.contactStaff();
 
-        // Admin reassigns the inquiry to teacher 2
+        // Admin logs in and responds
+        loginAsTeachingStaff(context);
+        setMockInput("0", "0", "Subject", "Response", "-1", "-1");
+        TeachingStaffController teachingController = new TeachingStaffController(
+                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
+        );
+        startOutputCapture();
+        teachingController.manageReceivedInquiries();
+        assertOutputContains("Email response sent!");
+    }
+
+    @Test
+    public void testRedirect() throws URISyntaxException, IOException, ParseException {
+        SharedContext context = new SharedContext();
+        setMockInput("inquirer@hindeburg.ac.uk", "n", "Question", "Inquiry");
+        InquirerController inquirer = new InquirerController(
+                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
+        );
+        inquirer.contactStaff();
+
+        // Admin logs in and responds
+        loginAsAdminStaff(context);
+        setMockInput("0", "0", "teacher1@hindeburg.ac.uk", "-1", "-1");
         AdminStaffController adminController = new AdminStaffController(
                 context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
         );
-        loginAsAdminStaff(context);
-        setMockInput("0","0", "teacher2@hindeburg.ac.uk", "-1", "-1", "0");
-        startOutputCapture();  // Start capturing just before we do output-generating things
+        startOutputCapture();
         adminController.manageInquiries();
-
-        // --- Verify both success messages appear ---
         assertOutputContains("Inquiry has been reassigned");
-
     }
 
 
     @Test
-    public void testConsultWithOnlyTags () throws URISyntaxException, IOException, ParseException {
-        // admin staff add a course with course organiser:
-
-        //     "username": "teacher1",
-        //    "password": "teacher1pass",
-        //    "email": "teacher1@hindeburg.ac.uk",
-        //    "role": "TeachingStaff"
-
-        // student then makes an inquiry to the course
-        // admin staff then logs in and looks at inquries
-        // teacher then logs in and responds to inquriry
+    public void testConsultWithOnlyTags() throws URISyntaxException, IOException, ParseException {
+        setMockInput("inquirer@hindeburg.ac.uk", "y", "CS101", "Question", "Inquiry", "-1");
+        InquirerController inquirer = new InquirerController(
+                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
+        );
+        startOutputCapture();
+        inquirer.contactStaff();
+        assertOutputContains("Email from inquiries@hindeburg.ac.uk to teacher1@hindeburg.ac.uk");
     }
-
 }

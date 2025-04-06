@@ -118,6 +118,10 @@ public class InquirerController extends Controller {
 
         Inquiry inquiry = new Inquiry(inquirerEmail, subject, text);
         sharedContext.inquiries.add(inquiry);
+        if(withTag){
+            inquiry.setAssignedTo(staffEmail);
+        }
+
 
         email.sendEmail(
                 SharedContext.ADMIN_STAFF_EMAIL,
