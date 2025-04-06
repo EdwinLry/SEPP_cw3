@@ -61,4 +61,13 @@ public class ChooseActivitySystemTests extends TUITest{
         studentController.manageTimetable();
         assertOutputContains("Invalid option:");
     }
+    @Test
+    public void testChosenActivityAlreadyChosen() throws URISyntaxException, IOException, ParseException {
+        setMockInput("4", "CS101", "1", "-1");
+        StudentController studentController = new StudentController(context,
+                new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
+        startOutputCapture();
+        studentController.manageTimetable();
+        assertOutputContains("Activity not found or already chosen");
+    }
 }

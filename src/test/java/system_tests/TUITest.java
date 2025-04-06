@@ -41,7 +41,8 @@ public class TUITest {
     public void setUp() {
         context = new SharedContext();
         // Set up the context with necessary data
-        initCourse();
+        initCourse1();
+        initCourse2();
         initFAQ();
     }
 
@@ -59,7 +60,7 @@ public class TUITest {
         faqManager.addSection(sectionWithTag);
         faqManager.addSection(sectionWithoutTag);
     }
-    private void initCourse() {
+    private void initCourse1() {
         CourseManager courseManager = context.getCourseManager();
         courseManager.addCourse(
                 "CS101",
@@ -139,6 +140,60 @@ public class TUITest {
                 semesterEnd,
                 LocalTime.of(15, 0),
                 "Lab B",
+                DayOfWeek.MONDAY,
+                "Lab",
+                15
+        );
+    }
+    private void initCourse2(){
+        CourseManager courseManager = context.getCourseManager();
+        courseManager.addCourse(
+                "CS202",
+                "Introduction to Computer Science202",
+                "This course covers basic CS202 concepts.",
+                true,
+                "Teacher 1",
+                "teacher1@hindeburg.ac.uk",
+                "Teacher 2",
+                "teacher2@hindeburg.ac.uk",
+                2,
+                1
+        );
+        Course course = courseManager.getCourse("CS202");
+
+        LocalDate semesterStart = LocalDate.of(2023, 9, 1);
+        LocalDate semesterEnd = LocalDate.of(2023, 12, 15);
+
+        course.addActivity(
+                semesterStart,
+                LocalTime.of(9, 0),
+                semesterEnd,
+                LocalTime.of(10, 0),
+                "Room 202",
+                DayOfWeek.MONDAY,
+                "Lecture",
+                false
+        );
+
+        courseManager.addCourse(
+                "CS303",
+                "Introduction to Computer Science 3rd",
+                "This course covers advanced CS concepts.",
+                true,
+                "Teacher 1",
+                "teacher1@hindeburg.ac.uk",
+                "Teacher 2",
+                "teacher2@hindeburg.ac.uk",
+                2,
+                1
+        );
+        course = courseManager.getCourse("CS303");
+        course.addActivity(
+                semesterStart,
+                LocalTime.of(9, 0),
+                semesterEnd,
+                LocalTime.of(10, 0),
+                "Room 303",
                 DayOfWeek.MONDAY,
                 "Lab",
                 15
