@@ -28,6 +28,7 @@ public class MenuController extends Controller {
     public enum TeachingStaffMainMenuOption {
         LOGOUT,
         MANAGE_RECEIVED_QUERIES,
+        VIEW_COURSE
     }
 
     public enum AdminStaffMainMenuOption {
@@ -35,6 +36,7 @@ public class MenuController extends Controller {
         MANAGE_QUERIES,
         MANAGE_FAQ,
         MANAGE_COURSE,
+        VIEW_COURSE
     }
 
     public void mainMenu() {
@@ -103,6 +105,7 @@ public class MenuController extends Controller {
         switch (option) {
             case LOGOUT -> new AuthenticatedUserController(sharedContext, view, auth, email).logout();
             case MANAGE_RECEIVED_QUERIES -> new TeachingStaffController(sharedContext, view, auth, email).manageReceivedInquiries();
+            case VIEW_COURSE -> new ViewerController(sharedContext, view, auth, email).viewCoursesMenu();
         }
         return false;
     }
@@ -118,6 +121,7 @@ public class MenuController extends Controller {
             case MANAGE_FAQ -> new AdminStaffController(sharedContext, view, auth, email).manageFAQ();
             case MANAGE_QUERIES -> new AdminStaffController(sharedContext, view, auth, email).manageInquiries();
             case MANAGE_COURSE -> new AdminStaffController(sharedContext, view, auth, email).manageCourses();
+            case VIEW_COURSE -> new ViewerController(sharedContext, view, auth, email).viewCoursesMenu();
         }
         return false;
     }

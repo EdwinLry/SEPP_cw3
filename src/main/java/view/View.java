@@ -1,5 +1,6 @@
 package view;
 
+import model.FAQ.FAQItem;
 import model.FAQManager;
 import model.FAQ.FAQSection;
 import model.Inquiry;
@@ -17,6 +18,7 @@ public interface View {
     void displayDivider();
     void displayFAQ(FAQManager faqManager);
     void displayFAQSection(FAQSection section);
+    void displayFAQItem(FAQItem item);
     void displayInquiry(Inquiry inquiry);
     void displayCourse(Course course);
     void displayTimetable(Timetable timetable);

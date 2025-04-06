@@ -307,6 +307,11 @@ public class CourseManager {
     }
     public void viewSpecificCourse(String name){
         view.displayCourse(courses.get(name));
+        view.displayInfo("Activities for course " + name + ":\n");
+        for(Activity activity : courses.get(name).getActivities().values()){
+            view.displayInfo(activity.toString());
+            view.displayDivider();
+        }
     }
     private Map<String,Course> getCourses(){return courses;}
     public Timetable getTimetable(String email){

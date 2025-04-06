@@ -22,7 +22,7 @@ public class FAQManager {
      */
     public void removeSection(FAQSection section) {
         view.displayFAQSection(section);
-        int id = Integer.parseInt(view.getInput("Enter the ID of the section to remove: "));
+        int id = Integer.parseInt(view.getInput("Enter the ID of the item to remove: "));
         if(section.removeItem(id)){
             view.displaySuccess("Item removed successfully.");
         } else {

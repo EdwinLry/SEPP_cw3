@@ -126,6 +126,11 @@ public class TextUserInterface implements View {
             System.out.println();
         }
     }
+    @Override
+    public void displayFAQItem(FAQItem item) {
+        System.out.println("Question: " + item.getQuestion());
+        System.out.println("Answer: " + item.getAnswer());
+    }
 
     @Override
     public void displayInquiry(Inquiry inquiry) {

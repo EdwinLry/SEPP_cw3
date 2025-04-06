@@ -1,9 +1,6 @@
 package model.FAQ;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 
 public class FAQSection {
     private final String topic;
@@ -38,20 +35,6 @@ public class FAQSection {
         }
     }
 
-    public boolean removeItem2(int itemId) {
-        if (itemId < 0 || itemId >= items.size()) {
-            return false;
-        }
-        for(FAQItem item : items) {
-            if (item.getId() == itemId) {
-                freeIds.add(itemId);
-                items.remove(item);
-                return true;
-            }
-        }
-        return false;
-    }
-
     public boolean removeItem(int itemId) {
         FAQItem toRemove = null;
 
@@ -74,13 +57,17 @@ public class FAQSection {
         return false;
     }
 
-    public FAQItem getItemsByTag(String courseCode){
+    public FAQItem[] getItemsByTag(String courseCode){
+        List<FAQItem> itemsWithTag = new ArrayList<>();
         for(FAQItem item : items){
             if(item.getCourseTag().equals(courseCode)){
-                return item;
+                itemsWithTag.add(item);
             }
         }
-        return null;
+        if(itemsWithTag.isEmpty()){
+            return null;
+        }
+        return itemsWithTag.toArray(new FAQItem[0]);
     }
 
     public boolean hasTopic(String topic){

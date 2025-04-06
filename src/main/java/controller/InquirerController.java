@@ -3,8 +3,13 @@ package controller;
 import external.AuthenticationService;
 import external.EmailService;
 import model.*;
+import model.FAQ.FAQItem;
 import model.FAQ.FAQSection;
 import view.View;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class InquirerController extends Controller {
     public InquirerController(SharedContext sharedContext, View view, AuthenticationService auth, EmailService email) {
@@ -17,7 +22,29 @@ public class InquirerController extends Controller {
 
         boolean onlyTags = view.getYesNoInput("Do you want to filter for just a course tag?");
         if(onlyTags){
-            String courseCode = view.getInput("Please enter course code to filter:");
+            if(Objects.equals(sharedContext.courseManager.viewCoursesFormatted(), "")){
+                view.displayError("No courses currently in the system.");
+                return;
+            }
+            FAQSection courseSection = new FAQSection("Courses");
+            String courseCode = view.getInput("Please enter course code:");
+            if(sharedContext.courseManager.checkCourseCode(courseCode)){
+                view.displayDivider();
+                view.displayInfo("FAQ for course " + courseCode + ":");
+                List<FAQSection> sections  = sharedContext.getFAQ().getSections();
+                for (FAQSection section : sections) {
+                    List<FAQItem> temp = List.of(section.getItemsByTag(courseCode));
+                    for(FAQItem item : temp){
+                        view.displayFAQItem(item);
+                    }
+                }
+                view.getInput("Press enter to continue...");
+                return;
+            }
+            else{
+                view.displayError("Invalid course code. No course found with code '" + courseCode + "'.");
+                return;
+            }
         }
 
         if (sharedContext.currentUser instanceof AuthenticatedUser) {
