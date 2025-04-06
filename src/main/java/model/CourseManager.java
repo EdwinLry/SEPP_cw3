@@ -245,6 +245,17 @@ public class CourseManager {
             logger.log(System.currentTimeMillis(), studentEmail, "chooseActivityForCourse",
                     studentEmail + courseCode, "SUCCESS");
             view.displaySuccess("The activity was successfully chosen");
+            // Check if the chosen activity is enough
+            int[] chosenActivities = currentTimeTable.chosenActivities(course.getCourseCode());
+            Map<Integer,Activity> activities = course.getActivities();
+            int count = CheckChosenTutorials(activities,chosenActivities);
+            if(count < course.getRequiredTutorials()){
+                view.displayError("You have to choose " + course.getRequiredTutorials() + " tutorials for this course");
+            }
+            count = CheckChosenLabs(activities,chosenActivities);
+            if(count < course.getRequiredLabs()){
+                view.displayError("You have to choose " + course.getRequiredLabs() + " labs for this course");
+            }
         } else {
             Logger logger = Logger.getInstance();
             logger.log(System.currentTimeMillis(), studentEmail, "chooseActivityForCourse",
@@ -304,6 +315,27 @@ public class CourseManager {
             return;
         }
         view.displayTimetable(currentTimeTable);
+
+        List<Course> courses = new ArrayList<>();
+        for (TimeSlot timeSlot : currentTimeTable.getTimeSlots()) {
+            Course course = getCourse(timeSlot.courseCode);
+            if(!courses.contains(course)) {
+                courses.add(course);
+            }
+        }
+        for(Course course : courses) {
+            Map<Integer,Activity> activities = course.getActivities();
+            int[] chosenActivities = currentTimeTable.chosenActivities(course.getCourseCode());
+            int count = CheckChosenTutorials(activities,chosenActivities);
+            if(count < course.getRequiredTutorials()){
+                view.displayError("You have to choose " + course.getRequiredTutorials() + " tutorials for this course");
+            }
+            count = CheckChosenLabs(activities,chosenActivities);
+            if(count < course.getRequiredLabs()){
+                view.displayError("You have to choose " + course.getRequiredLabs() + " labs for this course");
+            }
+        }
+
     }
     public void viewSpecificCourse(String name){
         view.displayCourse(courses.get(name));
