@@ -2,9 +2,11 @@ package system_tests;
 
 import controller.AdminStaffController;
 import controller.InquirerController;
+import controller.StudentController;
 import controller.TeachingStaffController;
 import external.MockAuthenticationService;
 import external.MockEmailService;
+import org.junit.jupiter.api.BeforeEach;
 import view.TextUserInterface;
 import model.SharedContext;
 import org.json.simple.parser.ParseException;
@@ -14,10 +16,20 @@ import java.net.URISyntaxException;
 
 public class ConsultMemberOfStaffSystemTests extends TUITest {
 
+    @BeforeEach
+    public void init() throws URISyntaxException, IOException, ParseException {
+        // Initialize the context
+        //loginAsStudent(context);
+        //setMockInput("1", "CS101", "-1");
+        //StudentController studentController = new StudentController(context,
+        //        new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
+        //studentController.manageTimetable();
+    }
+
     // TODO: a test where they write an email to someone on a course and then admin logs in and looks at that inquiry and then the actual user logs in and replies to email.
     @Test
     public void testValidInquiryNoTag() throws URISyntaxException, IOException, ParseException {
-        SharedContext context = new SharedContext();
+        //SharedContext context = new SharedContext();
         setMockInput("student1@hindeburg.ac.uk", "n", "Subject", "Inquiry.");
 
         InquirerController controller = new InquirerController(context,
@@ -30,21 +42,8 @@ public class ConsultMemberOfStaffSystemTests extends TUITest {
 
     @Test
     public void testValidCourseCode() throws URISyntaxException, IOException, ParseException {
-        SharedContext context = new SharedContext();
-
-        // Admin adds course
-        loginAsAdminStaff(context);
-        setMockInput("-2", "INF2B", "SEPP", "Software Engineering and Professional Practice", "n",
-                "Mrs A", "mrsa@ed.ac.uk", "Mr B", "mrb@ed.ac.uk", "1", "3", "-1", "0");
-
-        AdminStaffController adminController = new AdminStaffController(
-                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
-        );
-        adminController.manageCourses();
-
-        // Guest sends inquiry
         setMockInput(
-                "student1@hindeburg.ac.uk", "y", "INF2B", "Subject","Inquiry"
+                "student1@hindeburg.ac.uk", "y", "CS101", "Subject","Inquiry"
         );
 
         InquirerController inquirerController = new InquirerController(
@@ -59,43 +58,22 @@ public class ConsultMemberOfStaffSystemTests extends TUITest {
 
     @Test
     public void testInvalidCourseCode() throws URISyntaxException, IOException, ParseException {
-        SharedContext context = new SharedContext();
-
-        // Admin adds course
-        loginAsAdminStaff(context);
-        setMockInput("-2", "INF2B", "SEPP", "Software Engineering and Professional Practice", "n",
-                "Mrs A", "mrsa@ed.ac.uk", "Mr B", "mrb@ed.ac.uk", "1", "3", "-1", "0");
-
-        AdminStaffController adminController = new AdminStaffController(
-                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
-        );
-
-        adminController.manageCourses();
-
         // Guest tries to send inquiry with invalid course code
-        setMockInput(
-                "y", "not-a-code"
-        );
-
+        setMockInput("inquirer@hindeburg.ac.uk", "y", "not-a-code");
         InquirerController inquirerController = new InquirerController(
-                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
-        );
-
+                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
         startOutputCapture();
         inquirerController.contactStaff();
-
         assertOutputContains("Invalid course code. No course found with code 'not-a-code'");
     }
 
+
     @Test
     public void testNoCourses() throws URISyntaxException, IOException, ParseException {
-
         SharedContext context = new SharedContext();
         setMockInput("student1@hindeburg.ac.uk", "y");
-
         InquirerController controller = new InquirerController(context,
                 new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
-
         startOutputCapture();
         controller.contactStaff();
         assertOutputContains("No courses currently in the system.");
@@ -105,10 +83,8 @@ public class ConsultMemberOfStaffSystemTests extends TUITest {
     public void testInvalidEmail() throws URISyntaxException, IOException, ParseException {
         SharedContext context = new SharedContext();
         setMockInput("2", "not-an-email");
-
         InquirerController controller = new InquirerController(context,
                 new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
-
         startOutputCapture();
         controller.contactStaff();
         assertOutputContains("Invalid email address!");
@@ -118,10 +94,8 @@ public class ConsultMemberOfStaffSystemTests extends TUITest {
     public void testBlankSubject() throws URISyntaxException, IOException, ParseException {
         SharedContext context = new SharedContext();
         setMockInput("student1@hindeburg.ac.uk", "n", "", "Valid inquiry content.");
-
         InquirerController controller = new InquirerController(context,
                 new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
-
         startOutputCapture();
         controller.contactStaff();
         assertOutputContains("Inquiry subject cannot be blank!");
@@ -131,10 +105,8 @@ public class ConsultMemberOfStaffSystemTests extends TUITest {
     public void testBlankInquiryBody() throws URISyntaxException, IOException, ParseException {
         SharedContext context = new SharedContext();
         setMockInput("student1@hindeburg.ac.uk", "n", "Subject Line", "");
-
         InquirerController controller = new InquirerController(context,
                 new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
-
         startOutputCapture();
         controller.contactStaff();
         assertOutputContains("Inquiry content cannot be blank!");
@@ -146,12 +118,11 @@ public class ConsultMemberOfStaffSystemTests extends TUITest {
     public void testInquiryFlow() throws URISyntaxException, IOException, ParseException {
         SharedContext context = new SharedContext();
 
-        // --- Admin adds a course with valid teaching staff ---
         loginAsAdminStaff(context);
         setMockInput("-2", "123", "123", "123", "n",
                 "teacher3", "teacher3@hindeburg.ac.uk",
                 "teacher2", "teacher2@hindeburg.ac.uk",
-                "2", "3", "-1", "0");
+                "2", "3", "0", "-1", "0");
         AdminStaffController adminController = new AdminStaffController(
                 context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
         );
@@ -196,6 +167,31 @@ public class ConsultMemberOfStaffSystemTests extends TUITest {
         assertOutputContains("Inquiry has been reassigned");
         assertOutputContains("Email response sent!");
     }
+
+    @Test
+    public void testReassignInquiry() throws URISyntaxException, IOException, ParseException {
+        SharedContext context = new SharedContext();
+        // --- Student submits inquiry to that course ---
+        setMockInput("n", "Question", "Inquiry");
+        InquirerController inquirer = new InquirerController(
+                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
+        );
+        inquirer.contactStaff();
+
+        // Admin reassigns the inquiry to teacher 2
+        AdminStaffController adminController = new AdminStaffController(
+                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
+        );
+        loginAsAdminStaff(context);
+        setMockInput("0","0", "teacher2@hindeburg.ac.uk", "-1", "-1", "0");
+        startOutputCapture();  // Start capturing just before we do output-generating things
+        adminController.manageInquiries();
+
+        // --- Verify both success messages appear ---
+        assertOutputContains("Inquiry has been reassigned");
+
+    }
+
 
     @Test
     public void testConsultWithOnlyTags () throws URISyntaxException, IOException, ParseException {

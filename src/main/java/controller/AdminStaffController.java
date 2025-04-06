@@ -436,6 +436,7 @@ public class AdminStaffController extends StaffController {
         }
     }
 
+
     /** Helper method to add activity to course
      * @param course the course to which the activity will be added
      */
@@ -539,30 +540,6 @@ public class AdminStaffController extends StaffController {
         view.displaySuccess("Activity added successfully.");
     }
 
-    private void addActivityToCourse2(Course course) {
-        // Immediately parse each input into the required type
-        try{
-            String activityType = view.getInput("Enter activity type (e.g. Lecture, Tutorial, Lab): ");
-            LocalDate startDate = LocalDate.parse(view.getInput("Enter start date (YYYY-MM-DD): "));
-            LocalTime startTime = LocalTime.parse(view.getInput("Enter start time (HH:MM): "));
-            LocalDate endDate = LocalDate.parse(view.getInput("Enter end date (YYYY-MM-DD): "));
-            LocalTime endTime = LocalTime.parse(view.getInput("Enter end time (HH:MM): "));
-            String location = view.getInput("Enter location: ");
-            DayOfWeek day = DayOfWeek.valueOf(view.getInput("Enter day of the week (e.g. MONDAY, TUESDAY, etc.): "));
-
-            if (activityType.equals("Lecture")) {
-                boolean isRecorded = view.getYesNoInput("Is the lecture recorded?");
-                course.addActivity(startDate, startTime, endDate, endTime, location, day, activityType, isRecorded);
-            } else if (activityType.equals("Tutorial") || activityType.equals("Lab")) {
-                int groupSize = Integer.parseInt(view.getInput("Enter group size: "));
-                course.addActivity(startDate, startTime, endDate, endTime, location, day, activityType, groupSize);
-            } else {
-                view.displayError("Invalid activity type. Please enter Lecture, Tutorial, or Lab.");
-            }
-        }catch (Exception e) {
-            view.displayError("Invalid input. Please enter the correct data types.");
-        }
-    }
     private void addActivityToCourse() {
         String courseCode = view.getInput("Enter course code: ");
         Course course = sharedContext.getCourseManager().getCourse(courseCode);

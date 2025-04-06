@@ -22,9 +22,9 @@ public class ViewCoursesSystemTests extends TUITest {
         loginAsAdminStaff(context);
         setMockInput(
                 "-2", "INF2B", "SEPP", "Software Engineering and Professional Practice", "n", "Mrs A", "mrsa@ed.ac.uk",
-                "Mr B", "mrb@ed.ac.uk", "1", "3",
+                "Mr B", "mrb@ed.ac.uk", "1", "3", "0",
                 "-2", "INF2B-2", "SEPP-2", "Software Engineering and Professional Practice", "n", "Mrs A", "mrsa@ed.ac.uk",
-                "Mr B", "mrb@ed.ac.uk", "1", "3", "-1", "0"
+                "Mr B", "mrb@ed.ac.uk", "1", "3", "0", "-1", "0"
         );
         AdminStaffController adminStaff = new AdminStaffController(context,
                 new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
@@ -51,7 +51,7 @@ public class ViewCoursesSystemTests extends TUITest {
         loginAsAdminStaff(context);
         setMockInput(
                 "-2", "INF2B", "SEPP", "Software Engineering and Professional Practice", "n",
-                "Mrs A", "mrsa@ed.ac.uk", "Mr B", "mrb@ed.ac.uk", "2", "3",
+                "Mrs A", "mrsa@ed.ac.uk", "Mr B", "mrb@ed.ac.uk", "2", "3","0",
                 "-1", "0"
         );
         AdminStaffController adminStaff = new AdminStaffController(context,
@@ -88,7 +88,7 @@ public class ViewCoursesSystemTests extends TUITest {
         loginAsAdminStaff(context);
         setMockInput(
                 "-2", "INF2B", "SEPP", "Software Engineering and Professional Practice", "n",
-                "Mrs A", "mrsa@ed.ac.uk", "Mr B", "mrb@ed.ac.uk", "2", "3",
+                "Mrs A", "mrsa@ed.ac.uk", "Mr B", "mrb@ed.ac.uk", "2", "3", "0",
                 "-1", "0"
         );
         AdminStaffController adminStaff = new AdminStaffController(context,

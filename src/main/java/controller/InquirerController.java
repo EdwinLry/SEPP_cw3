@@ -120,7 +120,7 @@ public class InquirerController extends Controller {
         sharedContext.inquiries.add(inquiry);
 
         email.sendEmail(
-                inquirerEmail,
+                SharedContext.ADMIN_STAFF_EMAIL,
                 staffEmail,
                 "New inquiry from " + inquirerEmail,
                 "Subject line: " + subject + System.lineSeparator() + "Please log into the Self Service Portal to review and respond to the inquiry."

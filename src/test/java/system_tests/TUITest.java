@@ -66,10 +66,10 @@ public class TUITest {
                 "Introduction to Computer Science",
                 "This course covers basic CS concepts.",
                 false,
-                "Dr. John Doe",
-                "john.doe@example.com",
-                "Prof. Jane Smith",
-                "jane.smith@example.com",
+                "Teacher 1",
+                "teacher1@hindeburg.ac.uk",
+                "Teacher 2",
+                "teacher1@hindeburg.ac.uk",
                 2,
                 1
         );

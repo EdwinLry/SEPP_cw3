@@ -22,7 +22,7 @@ public class ChooseActivitySystemTests extends TUITest{
         studentController.manageTimetable();
     }
     @Test
-    public void testChooseActivity() throws URISyntaxException, IOException, ParseException {
+    public void testChooseOneActivitySuccess() throws URISyntaxException, IOException, ParseException {
         setMockInput("4", "CS101", "4", "-1");
         StudentController studentController = new StudentController(context,
                 new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
@@ -31,17 +31,36 @@ public class ChooseActivitySystemTests extends TUITest{
         assertOutputContains("The activity was successfully chosen");
     }
 
+    @Test
+    public void testChooseAllActivitySuccess() throws URISyntaxException, IOException, ParseException {
+        setMockInput("4", "CS101", "2", "4", "3", "4", "4", "3", "-1");
+        StudentController studentController = new StudentController(context,
+                new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
+        startOutputCapture();
+        studentController.manageTimetable();
+        assertOutputContains("The activity was successfully chosen");
+    }
 
 
     @Test
-    public void testChooseActivityWithInvalidInput() {
+    public void testChooseActivityWithInvalidCourseCode() throws URISyntaxException, IOException, ParseException {
         // This test is not implemented yet.
         // You can implement it based on your requirements.
+        setMockInput("4", "not-a-course", "-1");
+        StudentController studentController = new StudentController(context,
+                new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
+        startOutputCapture();
+        studentController.manageTimetable();
+        assertOutputContains("Incorrect course code.");
     }
 
     @Test
-    public void testChooseActivityWithValidInput() {
-        // This test is not implemented yet.
-        // You can implement it based on your requirements.
+    public void testChooseActivityWithInvalidActivityCode() throws URISyntaxException, IOException, ParseException {
+        setMockInput("4", "CS101", "not-a-code", "-1");
+        StudentController studentController = new StudentController(context,
+                new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
+        startOutputCapture();
+        studentController.manageTimetable();
+        assertOutputContains("Invalid option:");
     }
 }

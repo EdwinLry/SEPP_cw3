@@ -47,7 +47,7 @@ public class AddFAQQASystemTests extends TUITest {
                 // Add course
                 "-2", "INF2B", "SEPP", "Software Engineering and Professional Practice",
                 "n", "Mrs A", "mrsa@ed.ac.uk",
-                "Mr B", "mrb@ed.ac.uk", "1", "3", "-1", "0",
+                "Mr B", "mrb@ed.ac.uk", "1", "3", "0", "-1", "0",
 
                 // Add FAQ question
                 "2", "-2",             // Manage FAQ → Add FAQ
@@ -83,7 +83,7 @@ public class AddFAQQASystemTests extends TUITest {
                 // Add a course
                 "-2", "INF2B", "SEPP", "Software Engineering and Professional Practice",
                 "n", "Mrs A", "mrsa@ed.ac.uk",
-                "Mr B", "mrb@ed.ac.uk", "1", "3", "-1", "0",
+                "Mr B", "mrb@ed.ac.uk", "1", "3", "0", "-1", "0",
 
                 // Add a question
                 "2", "-2",             // Manage FAQ → Add FAQ
