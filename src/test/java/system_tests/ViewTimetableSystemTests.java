@@ -26,15 +26,14 @@ public class ViewTimetableSystemTests extends TUITest {
     }
     @Test
     public void testChooseOneActivitySuccess() throws URISyntaxException, IOException, ParseException {
-        SharedContext context = new SharedContext();
         loginAsStudent(context);
-        setMockInput("3", "-1", "-1");
+        setMockInput("3", "-1");
         StudentController controller = new StudentController(
                 context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
         );
         startOutputCapture();
         controller.manageTimetable();
-        assertOutputContains("Timetable is here.");
+        assertOutputContains("Timetable for");
     }
     @Test
     public void testEmptyTimetable() throws URISyntaxException, IOException, ParseException {
