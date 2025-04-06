@@ -9,14 +9,11 @@ public class Logger {
     // Singleton instance
     private static Logger instance;
     // Internal storage for log entries
-    private final List<String> logEntries;
     // Formatter for timestamps
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     // Private constructor to prevent instantiation
-    private Logger() {
-        logEntries = new ArrayList<>();
-    }
+    private Logger() {}
     public static Logger getInstance() {
         if (instance == null) {
             instance = new Logger();
@@ -27,6 +24,10 @@ public class Logger {
     public void log (long time, String userId, String actionName, String inputs, String status) {
         info("Time: {}, User ID: {}, Action: {}, Inputs: {}, Status: {}",
                 time, userId, actionName, inputs, status);
-        System.out.println(time);
+
+    }
+
+    public void printLog() {
+        info("Log Entries:");
     }
 }
