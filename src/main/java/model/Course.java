@@ -86,7 +86,7 @@ public class Course {
 
     public boolean isUnrecordedLecture(int activityId) {
         return activities.get(activityId) instanceof Lecture &&
-                ((Lecture) activities.get(activityId)).isRecorded();
+               !((Lecture) activities.get(activityId)).isRecorded();
     }
 
     @Override
