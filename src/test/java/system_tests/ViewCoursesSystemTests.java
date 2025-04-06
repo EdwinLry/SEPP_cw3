@@ -86,16 +86,12 @@ public class ViewCoursesSystemTests extends TUITest {
     @Test
     public void testNoEnteredCourses() throws URISyntaxException, IOException, ParseException {
         SharedContext context = new SharedContext();
-
         // Guest searches for invalid course code
         setMockInput("1", "3");
         ViewerController controller = new ViewerController(
-                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
-        );
-
+                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
         startOutputCapture();
         controller.viewCoursesMenu();
-
         assertOutputContains("No courses available.");
     }
 
