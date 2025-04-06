@@ -6,7 +6,7 @@ import view.View;
 import java.util.*;
 
 public class SharedContext {
-    public static final String ADMIN_STAFF_EMAIL = "inquiries@hindeburg.ac.nz";
+    public static final String ADMIN_STAFF_EMAIL = "inquiries@hindeburg.ac.uk";
     public User currentUser;
 
     public final List<Inquiry> inquiries;
