@@ -16,25 +16,11 @@ import java.net.URISyntaxException;
 
 public class ConsultMemberOfStaffSystemTests extends TUITest {
 
-    @BeforeEach
-    public void init() throws URISyntaxException, IOException, ParseException {
-        // Initialize the context
-        //loginAsStudent(context);
-        //setMockInput("1", "CS101", "-1");
-        //StudentController studentController = new StudentController(context,
-        //        new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
-        //studentController.manageTimetable();
-    }
-
-    // TODO: a test where they write an email to someone on a course and then admin logs in and looks at that inquiry and then the actual user logs in and replies to email.
     @Test
     public void testValidInquiryNoTag() throws URISyntaxException, IOException, ParseException {
-        //SharedContext context = new SharedContext();
         setMockInput("student1@hindeburg.ac.uk", "n", "Subject", "Inquiry.");
-
         InquirerController controller = new InquirerController(context,
                 new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
-
         startOutputCapture();
         controller.contactStaff();
         assertOutputContains("Your inquiry has been recorded. Someone will be in touch via email soon!");
@@ -42,23 +28,16 @@ public class ConsultMemberOfStaffSystemTests extends TUITest {
 
     @Test
     public void testValidCourseCode() throws URISyntaxException, IOException, ParseException {
-        setMockInput(
-                "student1@hindeburg.ac.uk", "y", "CS101", "Subject","Inquiry"
-        );
-
+        setMockInput("student1@hindeburg.ac.uk", "y", "CS101", "Subject","Inquiry");
         InquirerController inquirerController = new InquirerController(
-                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
-        );
-
+                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
         startOutputCapture();
         inquirerController.contactStaff();
-
         assertOutputContains("Your inquiry has been recorded. Someone will be in touch via email soon!");
     }
 
     @Test
     public void testInvalidCourseCode() throws URISyntaxException, IOException, ParseException {
-        // Guest tries to send inquiry with invalid course code
         setMockInput("inquirer@hindeburg.ac.uk", "y", "not-a-code");
         InquirerController inquirerController = new InquirerController(
                 context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
@@ -112,9 +91,8 @@ public class ConsultMemberOfStaffSystemTests extends TUITest {
         assertOutputContains("Inquiry content cannot be blank!");
     }
 
-
     @Test
-    public void testRespond() throws URISyntaxException, IOException, ParseException {
+    public void testRespondAdmin() throws URISyntaxException, IOException, ParseException {
         SharedContext context = new SharedContext();
         setMockInput("inquirer@hindeburg.ac.uk", "n", "Question", "Inquiry");
         InquirerController inquirer = new InquirerController(
@@ -126,8 +104,7 @@ public class ConsultMemberOfStaffSystemTests extends TUITest {
         loginAsAdminStaff(context);
         setMockInput("0", "1", "Subject", "Response", "-1");
         AdminStaffController adminController = new AdminStaffController(
-                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
-        );
+                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
         startOutputCapture();
         adminController.manageInquiries();
         assertOutputContains("Email response sent!");
@@ -140,13 +117,11 @@ public class ConsultMemberOfStaffSystemTests extends TUITest {
                 context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
         );
         inquirer.contactStaff();
-
-        // Admin logs in and responds
+        // Teacher logs in and responds
         loginAsTeachingStaff(context);
         setMockInput("0", "0", "Subject", "Response", "-1", "-1");
         TeachingStaffController teachingController = new TeachingStaffController(
-                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
-        );
+                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
         startOutputCapture();
         teachingController.manageReceivedInquiries();
         assertOutputContains("Email response sent!");
@@ -157,16 +132,14 @@ public class ConsultMemberOfStaffSystemTests extends TUITest {
         SharedContext context = new SharedContext();
         setMockInput("inquirer@hindeburg.ac.uk", "n", "Question", "Inquiry");
         InquirerController inquirer = new InquirerController(
-                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
-        );
+                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
         inquirer.contactStaff();
 
-        // Admin logs in and responds
+        // Admin logs in and redirects
         loginAsAdminStaff(context);
         setMockInput("0", "0", "teacher1@hindeburg.ac.uk", "-1", "-1");
         AdminStaffController adminController = new AdminStaffController(
-                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
-        );
+                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
         startOutputCapture();
         adminController.manageInquiries();
         assertOutputContains("Inquiry has been reassigned");
@@ -177,8 +150,7 @@ public class ConsultMemberOfStaffSystemTests extends TUITest {
     public void testConsultWithOnlyTags() throws URISyntaxException, IOException, ParseException {
         setMockInput("inquirer@hindeburg.ac.uk", "y", "CS101", "Question", "Inquiry", "-1");
         InquirerController inquirer = new InquirerController(
-                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
-        );
+                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
         startOutputCapture();
         inquirer.contactStaff();
         assertOutputContains("Email from inquiries@hindeburg.ac.uk to teacher1@hindeburg.ac.uk");

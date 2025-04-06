@@ -26,31 +26,18 @@ public class RemoveCourseSystemTests extends TUITest{
     @Test
     public void testRemoveCourseSuccessfully() throws URISyntaxException, IOException, ParseException {
         setMockInput("-4", "INF1A", "-1");
-
-        AdminStaffController controller = new AdminStaffController(
-                context,
-                new TextUserInterface(),
-                new MockAuthenticationService(),
-                new MockEmailService()
-        );
-
+        AdminStaffController controller = new AdminStaffController(context, new TextUserInterface(),
+                new MockAuthenticationService(), new MockEmailService());
         startOutputCapture();
         controller.manageCourses();
-
         assertOutputContains("Course removed successfully");
     }
 
     @Test
     public void testRemoveCourseUnSuccessfully() throws URISyntaxException, IOException, ParseException {
         setMockInput("-4", "INF1B", "-1");
-
-        AdminStaffController controller = new AdminStaffController(
-                context,
-                new TextUserInterface(),
-                new MockAuthenticationService(),
-                new MockEmailService()
-        );
-
+        AdminStaffController controller = new AdminStaffController(context, new TextUserInterface(),
+                new MockAuthenticationService(), new MockEmailService());
         startOutputCapture();
         controller.manageCourses();
         assertOutputContains("Course not found");
@@ -59,14 +46,8 @@ public class RemoveCourseSystemTests extends TUITest{
     @Test
     public void testUncapitalizedCourseCode() throws URISyntaxException, IOException, ParseException {
         setMockInput("-4", "inf1a", "-1");
-
-        AdminStaffController controller = new AdminStaffController(
-                context,
-                new TextUserInterface(),
-                new MockAuthenticationService(),
-                new MockEmailService()
-        );
-
+        AdminStaffController controller = new AdminStaffController(context, new TextUserInterface(),
+                new MockAuthenticationService(), new MockEmailService());
         startOutputCapture();
         controller.manageCourses();
         assertOutputContains("Course not found");
@@ -75,16 +56,10 @@ public class RemoveCourseSystemTests extends TUITest{
     @Test
     public void testNoCourseToBeRemoved() throws URISyntaxException, IOException, ParseException {
         context.courseManager.removeCourse("INF1A");
-
         setMockInput("-4", "-1");
-
         AdminStaffController controller = new AdminStaffController(
-                context,
-                new TextUserInterface(),
-                new MockAuthenticationService(),
-                new MockEmailService()
+                context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
         );
-
         startOutputCapture();
         controller.manageCourses();
         assertOutputContains("No courses available");
@@ -93,14 +68,8 @@ public class RemoveCourseSystemTests extends TUITest{
     @Test
     public void testNullInput() throws URISyntaxException, IOException, ParseException {
         setMockInput("-4", null,"-1");
-
-        AdminStaffController controller = new AdminStaffController(
-                context,
-                new TextUserInterface(),
-                new MockAuthenticationService(),
-                new MockEmailService()
-        );
-
+        AdminStaffController controller = new AdminStaffController(context, new TextUserInterface(),
+                new MockAuthenticationService(), new MockEmailService());
         startOutputCapture();
         controller.manageCourses();
         assertOutputContains("Course not found");

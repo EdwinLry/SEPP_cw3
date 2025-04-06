@@ -44,8 +44,6 @@ public class ChooseActivitySystemTests extends TUITest{
 
     @Test
     public void testChooseActivityWithInvalidCourseCode() throws URISyntaxException, IOException, ParseException {
-        // This test is not implemented yet.
-        // You can implement it based on your requirements.
         setMockInput("4", "not-a-course", "-1");
         StudentController studentController = new StudentController(context,
                 new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());

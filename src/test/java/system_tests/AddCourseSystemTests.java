@@ -12,27 +12,18 @@ import java.net.URISyntaxException;
 
 
 public class AddCourseSystemTests extends TUITest{
-    //TODO: implement this
-    //@BeforeEach
+
     @Test
     public void testAddCourseNoActivities() throws URISyntaxException, IOException, ParseException {
         SharedContext context = new SharedContext();
         loginAsAdminStaff(context);
-
         setMockInput("-2", "INF1A", "Informatics 1", "Intro to Informatics",
                 "y", "Dr X", "drx@ed.ac.uk", "Ms Y", "msy@ed.ac.uk",
-                "2", "3","0", "-1");
-
-        AdminStaffController controller = new AdminStaffController(
-                context,
-                new TextUserInterface(),
-                new MockAuthenticationService(),
-                new MockEmailService()
-        );
-
+                "2", "3", "0", "-1");
+        AdminStaffController controller = new AdminStaffController(context, new TextUserInterface(),
+                new MockAuthenticationService(), new MockEmailService());
         startOutputCapture();
         controller.manageCourses();
-
         assertOutputContains("Course added successfully");
     }
 
@@ -41,86 +32,64 @@ public class AddCourseSystemTests extends TUITest{
     public void testAddCourseWithThreeActivities() throws URISyntaxException, IOException, ParseException {
         SharedContext context = new SharedContext();
         loginAsAdminStaff(context);
-
         setMockInput(
-                // === Course Info ===
-                "-2", "CS2025", "Software Engineering", "Covers software practices",
-                "n", "Dr. Ada", "ada@cs.edu", "Ms. Turing", "turing@cs.edu",
-                "1", "1", "3", // 3 activities
+                // Course Information
+                "-2", "INF1A", "Informatics 1", "Intro to Informatics",
+                "y", "Dr X", "drx@ed.ac.uk", "Ms Y", "msy@ed.ac.uk",
+                "2", "3", "3",
 
-                // === Activity 1: Lecture ===
-                "100", "Lecture", "2025-09-01", "09:00", "2025-12-01", "10:00",
-                "Room L1", "MONDAY", "y",
+                // Lecture
+                "1", "Lecture", "2025-09-01", "09:00", "2025-12-01", "10:00",
+                "Gordon Aikman", "MONDAY", "y",
 
-                // === Activity 2: Tutorial ===
-                "101", "Tutorial", "2025-09-03", "11:00", "2025-12-03", "12:00",
-                "Room T1", "WEDNESDAY", "20",
+                // Tutorial
+                "2", "Tutorial", "2025-09-03", "11:00", "2025-12-03", "12:00",
+                "Appleton 6.05", "WEDNESDAY", "20",
 
-                // === Activity 3: Lab ===
-                "102", "Lab", "2025-09-05", "14:00", "2025-12-05", "16:00",
-                "Lab 1", "FRIDAY", "15",
+                // Lab
+                "3", "Lab", "2025-09-05", "14:00", "2025-12-05", "16:00",
+                "Appleton 4.02", "FRIDAY", "15",
 
-                // Exit back to main
                 "-1"
         );
-
-        AdminStaffController controller = new AdminStaffController(
-                context,
-                new TextUserInterface(),
-                new MockAuthenticationService(),
-                new MockEmailService()
-        );
+        AdminStaffController controller = new AdminStaffController(context, new TextUserInterface(),
+                new MockAuthenticationService(), new MockEmailService());
 
         startOutputCapture();
         controller.manageCourses();
-
         assertOutputContains("Course added successfully");
         assertOutputContains("Activity added successfully");
     }
 
 
-    //Invalid input. Please enter the correct data types.
     @Test
-    public void testAddInvalidDataTypes() throws URISyntaxException, IOException, ParseException {
+    public void testAddInvalidDateFormat() throws URISyntaxException, IOException, ParseException {
         SharedContext context = new SharedContext();
         loginAsAdminStaff(context);
 
         setMockInput(
-                // === Course Information ===
-                "-2",                          // Choose "Add course"
-                "CS2025",                      // Course code
-                "Software Engineering",        // Course name
-                "Covers software practices",   // Course description
-                "n",                           // Requires computers?
-                "Dr. Ada", "ada@cs.edu",       // Organiser
-                "Ms. Turing", "turing@cs.edu", // Secretary
-                "2", "1",                      // Required tutorials/labs
-                "1",                           // Number of activities
+                // Course Information
+                "-2", "INF1A", "Informatics 1", "Intro to Informatics",
+                "y", "Dr X", "drx@ed.ac.uk", "Ms Y", "msy@ed.ac.uk",
+                "2", "3", "1",
 
-                // === Activity 1: Lecture ===
-                "100",                         // Activity ID
-                "Lecture",                     // Activity type
-                "wrong-date-format",                  // Start date
+                // Adding with wrong date
+                "1",
+                "Lecture",
+                "wrong-date-format",
                 "2025-12-01",
-                "09:00",                       // Start time
+                "09:00",
                 "2025-12-01", "10:00",
-                "Room L1",                     // Location
-                "MONDAY",                      // Day of week
-                "y",                           // Is lecture recorded?
+                "Appleton 1.05",
+                "MONDAY",
+                "y",
 
-                "-1"                           // Return to main menu
-        );
+                "-1");
 
-        AdminStaffController controller = new AdminStaffController(
-                context,
-                new TextUserInterface(),
-                new MockAuthenticationService(),
-                new MockEmailService()
-        );
-
+        AdminStaffController controller = new AdminStaffController(context, new TextUserInterface(),
+                new MockAuthenticationService(), new MockEmailService());
         startOutputCapture();
         controller.manageCourses();
-
         assertOutputContains("Invalid date format. Please use YYYY-MM-DD.");
     }
 
@@ -129,21 +98,18 @@ public class AddCourseSystemTests extends TUITest{
         SharedContext context = new SharedContext();
         loginAsAdminStaff(context);
 
-        // Add once
+        // Add course
         setMockInput("-2", "INF1A", "Informatics 1", "Desc", "n",
                 "A", "a@x.com", "B", "b@x.com", "1", "1", "0","-1");
         new AdminStaffController(context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()).manageCourses();
 
-        // Try to add again
+        // Try to add same course
         loginAsAdminStaff(context);
         setMockInput("-2", "INF1A", "-1");
-
         AdminStaffController controller = new AdminStaffController(context,
                 new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
-
         startOutputCapture();
         controller.manageCourses();
-
         assertOutputContains("Course with the same code already exists");
     }
 
@@ -151,17 +117,12 @@ public class AddCourseSystemTests extends TUITest{
     public void testNotNumberTutorials() throws Exception {
         SharedContext context = new SharedContext();
         loginAsAdminStaff(context);
-
         setMockInput("-2", "INF1B", "Informatics 2", "Desc", "n",
-                "Dr C", "c@x.com", "Ms D", "d@x.com", "not-a-number", // Not a number input
-                "1", "-1");
-
+                "Dr C", "c@x.com", "Ms D", "d@x.com", "not-a-number", "1", "-1");
         AdminStaffController controller = new AdminStaffController(context,
                 new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
-
         startOutputCapture();
         controller.manageCourses();
-
         assertOutputContains("Invalid input. Please enter a number.");
     }
 
@@ -169,17 +130,13 @@ public class AddCourseSystemTests extends TUITest{
     public void testNegativeNumberTutorials() throws Exception {
         SharedContext context = new SharedContext();
         loginAsAdminStaff(context);
-
         setMockInput("-2", "INF1B", "Informatics 2", "Desc", "n",
                 "Dr C", "c@x.com", "Ms D", "d@x.com", "-3", // Negative tutorials input
                 "1", "-1");
-
         AdminStaffController controller = new AdminStaffController(context,
                 new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
-
         startOutputCapture();
         controller.manageCourses();
-
         assertOutputContains("Need 0 or more of each.");
     }
 
@@ -187,16 +144,11 @@ public class AddCourseSystemTests extends TUITest{
     public void testInvalidEmail() throws Exception {
         SharedContext context = new SharedContext();
         loginAsAdminStaff(context);
-
-        setMockInput("-2", "INF1B", "Informatics 2", "Desc", "n",
-                "Dr C", "not-an-email", "-1");
-
+        setMockInput("-2", "INF1B", "Informatics 2", "Desc", "n", "Dr C", "not-an-email", "-1");
         AdminStaffController controller = new AdminStaffController(context,
                 new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
-
         startOutputCapture();
         controller.manageCourses();
-
         assertOutputContains("Invalid course organiser email.");
     }
 }

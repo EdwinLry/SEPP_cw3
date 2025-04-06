@@ -3,10 +3,12 @@ package view;
 import model.*;
 import model.FAQ.FAQItem;
 import model.FAQ.FAQSection;
+import model.activities.Activity;
 import model.timetable.TimeSlot;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Map;
 import java.util.Scanner;
 
 public class TextUserInterface implements View {
@@ -146,6 +148,13 @@ public class TextUserInterface implements View {
         System.out.println("Course Secretary Email: " + course.getCourseSecretaryEmail());
         System.out.println("Required Tutorials: " + course.getRequiredTutorials());
         System.out.println("Required Labs: " + course.getRequiredLabs());
+
+        System.out.println("\nCourse Activity Timetable:");
+        Map<Integer, Activity> activities = course.getActivities();
+        for (Activity activity : activities.values()) {
+            System.out.println(activity);
+        }
+        System.out.println();
     }
     public void displayTimetable(Timetable timetable) {
         System.out.println("Timetable for " + timetable.getStudentEmail());

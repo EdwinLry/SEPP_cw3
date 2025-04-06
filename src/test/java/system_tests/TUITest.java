@@ -69,7 +69,7 @@ public class TUITest {
                 "Teacher 1",
                 "teacher1@hindeburg.ac.uk",
                 "Teacher 2",
-                "teacher1@hindeburg.ac.uk",
+                "teacher2@hindeburg.ac.uk",
                 2,
                 1
         );
