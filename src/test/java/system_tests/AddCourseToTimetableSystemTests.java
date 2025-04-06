@@ -67,6 +67,32 @@ public class AddCourseToTimetableSystemTests extends TUITest {
         studentController.manageTimetable();
         assertOutputContains("No courses currently in system.");
     }
-
+    /**
+     Tests adding a course with a unrecorded lecture conflict.
+     */
+    @Test
+    public void testConflictUnrecordedLecture() throws URISyntaxException, IOException, ParseException {
+        loginAsStudent(context);
+        setMockInput("1", "CS101", "1", "CS202", "-1");
+        StudentController studentController = new StudentController(context,
+                new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
+        startOutputCapture();
+        studentController.manageTimetable();
+        assertOutputContains("You have at least one clash win an unrecorded lecture. The course cannot be added to your timetable");
+    }
+    /**
+     Tests adding a course with lab or tutorial conflict.
+     */
+    @Test
+    public void testConflictNormalActivity() throws URISyntaxException, IOException, ParseException {
+        loginAsStudent(context);
+        setMockInput("1", "CS101", "1", "CS303", "-1");
+        StudentController studentController = new StudentController(context,
+                new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
+        startOutputCapture();
+        studentController.manageTimetable();
+        assertOutputContains("clash");
+        assertOutputContains("successfully added to your timetable");
+    }
 
 }

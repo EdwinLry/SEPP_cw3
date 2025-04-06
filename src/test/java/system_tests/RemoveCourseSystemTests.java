@@ -1,6 +1,7 @@
 package system_tests;
 
 import controller.AdminStaffController;
+import controller.StudentController;
 import external.MockAuthenticationService;
 import external.MockEmailService;
 
@@ -14,13 +15,18 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 public class RemoveCourseSystemTests extends TUITest{
-    private final SharedContext context = new SharedContext();
     @BeforeEach
     public void createTestCourse() throws URISyntaxException, IOException, ParseException {
+        loginAsStudent(context);
+        setMockInput("1", "CS101", "-1");
+        StudentController studentController = new StudentController(context,
+                new TextUserInterface(), new MockAuthenticationService(), new MockEmailService());
+        studentController.manageTimetable();
         loginAsAdminStaff(context);
         context.getCourseManager().addCourse("INF1A", "Informatics 1", "Intro to Informatics",
                 true, "Dr X", "drx@ed.ac.uk", "Ms Y", "msy@ed.ac.uk",
                 2, 3);
+
     }
 
     @Test
@@ -55,7 +61,7 @@ public class RemoveCourseSystemTests extends TUITest{
 
     @Test
     public void testNoCourseToBeRemoved() throws URISyntaxException, IOException, ParseException {
-        context.courseManager.removeCourse("INF1A");
+        context = new SharedContext();
         setMockInput("-4", "-1");
         AdminStaffController controller = new AdminStaffController(
                 context, new TextUserInterface(), new MockAuthenticationService(), new MockEmailService()
@@ -73,5 +79,14 @@ public class RemoveCourseSystemTests extends TUITest{
         startOutputCapture();
         controller.manageCourses();
         assertOutputContains("Course not found");
+    }
+    @Test
+    public void removeCourseInTimetable() throws URISyntaxException, IOException, ParseException {
+        setMockInput("-4", "CS101", "-1");
+        AdminStaffController controller = new AdminStaffController(context, new TextUserInterface(),
+                new MockAuthenticationService(), new MockEmailService());
+        startOutputCapture();
+        controller.manageCourses();
+        assertOutputContains("Course removed successfully");
     }
 }
